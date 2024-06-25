@@ -47,3 +47,252 @@ body {
     display: none;
   }
 }
+
+.caption {
+  font-size: 1.25em;
+}
+
+.caption-area {
+  padding: 1em; /* 為 div 提供一些內部空間 */
+  /* padding-left: 60px; */
+  border-radius: 1em; /* 圓角的半徑 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 6px 20px rgba(0,0,0,0.19); /* 添加陰影效果 */
+  /* 首個陰影是較小的模糊，主要為輕微突出效果
+     第二個陰影模糊範圍更大，為元素添加更明顯的深度 */
+  height: 380px;
+  font-size: 1em;
+  color: aliceblue;
+}
+
+.question {
+  padding: 1em; /* 為 div 提供一些內部空間 */
+  /* padding-left: 60px; */
+  border-radius: 1em; /* 圓角的半徑 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 6px 20px rgba(0,0,0,0.19); /* 添加陰影效果 */
+  /* 首個陰影是較小的模糊，主要為輕微突出效果
+     第二個陰影模糊範圍更大，為元素添加更明顯的深度 */
+  height: 380px;
+  font-size: 1em;
+  color: aliceblue;
+}
+
+.question-area {
+  height: 120px;
+  font-size: 1.5em;
+}
+
+.option-button {
+  display: inline-block;
+  padding: 2px 4px;
+  /* margin: 5px; */
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  background-color: aliceblue;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 2px #999;
+  /* font-size: 36px; */
+  color: #2b6e6e;
+  margin-top: 10px;
+  font-size: 1.25em;
+  font-weight: 500;
+}
+
+.option-button:hover {background-color: #f0f3e5}
+
+.option-button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.bg-white {
+  background-color: #fff; /* 設置背景顏色，陰影在亮色背景下更明顯 */
+}
+
+.message-input, .menu {
+  display: none;
+}
+
+input {
+  color: #2b6e6e;
+}
+
+input[type="text"], input[type="number"] {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.radio-label {
+  position: relative;
+  padding-left: 18px;
+  margin-right: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.radio-label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: border-color 0.3s;
+}
+
+.radio-label::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+input[type="radio"]:checked + .radio-label::before {
+  border-color: #337ab7;
+}
+
+input[type="radio"]:checked + .radio-label::after {
+  opacity: 1;
+  background-color: #337ab7;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+.popup-result {
+  background-image: url('/gif/BG-blue.gif');
+  left: 10%;
+  transform: translateX(-10%);
+  width: 683px;
+}
+
+#closeBtn {
+  /* display: inline-block; */
+  padding: 4px 24px;
+  /* font-size: 18px; */
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #2b6e6e;
+  background-color: #fff;
+  border: 2px solid #333;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  float: right; /* 使按鈕靠右 */
+}
+
+#report {
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
+  box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.9) !important;
+}
+
+.bcq-result {
+  font-size: 1.5em;
+  color: #FFFFFF;
+  
+}
+
+#bcq-name {
+  position: absolute;
+  top: 1em;
+  left: 3.6em;
+  max-width: 9ch; /* 限制寬度為 9 個字元 */
+  white-space: nowrap; /* 防止文字換行 */
+  overflow: hidden; /* 隱藏超出部分 */
+  text-overflow: ellipsis; /* 超出部分顯示省略號 */
+}
+
+#bcq-name::first-letter {
+  font-size: 4em; /* 設置首字放大的大小 */
+  /*float: left;*/ /* 使首字下沉 */
+  margin-right: 1px; /* 設置首字和後續文字的間距 */
+}
+
+#bcq-type-a {
+  position: fixed;
+  top: 8.2em;
+  left: 3.8em;
+}
+
+#bcq-type-a img {
+  width: 51.4px;
+  height: 51.4px;
+}
+
+#bcq-type-b {
+  position: fixed;
+  top: 8.2em;
+  left: 9.6em;
+}
+
+#bcq-type-b img {
+  width: 51.4px;
+  height: 51.4px;
+}
+
+#bcq-type-c {
+  position: fixed;
+  top: 8.2em;
+  left: 15.5em;
+}
+
+#bcq-type-c img {
+  width: 51.4px;
+  height: 51.4px;
+}
+
+#bcq-day-hant {
+  position: fixed;
+  top: 1.8em;
+  left: 15.2em;
+}
+
+#bcq-day-hant img {
+  width: 171.5px;
+  height: 137.1px;
+}
+
+#bcq-desc {
+  position: fixed;
+  top: 11em;
+  left: 1.45em;
+}
+
+#bcq-desc img {
+  width: 391.4px;
+  height: 120px;
+}
+
+#bcq-yes {
+  position: fixed;
+  top: 32.5em;
+  left: 7.6em;
+  color: aliceblue;
+  font-size: 0.8em;
+  width: 26.8em;
+}
+
+#bcq-no {
+  position: fixed;
+  top: 38.1em;
+  left: 7.6em;
+  color: aliceblue;
+  font-size: 0.8em;
+  width: 26.8em;
+}
+

@@ -29,7 +29,7 @@ export default function Home() {
 
   const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
   const [selectAIService, setSelectAIService] = useState("openai");
-  const [selectAIModel, setSelectAIModel] = useState("gpt-3.5-turbo");
+  const [selectAIModel, setSelectAIModel] = useState("gpt-4o");
   const [openAiKey, setOpenAiKey] = useState("");
   const [anthropicKey, setAnthropicKey] = useState("");
   const [googleKey, setGoogleKey] = useState("");
@@ -37,9 +37,9 @@ export default function Home() {
   const [localLlmUrl, setLocalLlmUrl] = useState("");
   const [difyKey, setDifyKey] = useState("");
   const [difyUrl, setDifyUrl] = useState("");
-  const [selectVoice, setSelectVoice] = useState("voicevox");
-  const [selectLanguage, setSelectLanguage] = useState("JP");
-  const [selectVoiceLanguage, setSelectVoiceLanguage] = useState("ja-JP");
+  const [selectVoice, setSelectVoice] = useState("gsvitts");
+  const [selectLanguage, setSelectLanguage] = useState("ZH");
+  const [selectVoiceLanguage, setSelectVoiceLanguage] = useState("zh-TW");
   const [koeiromapKey, setKoeiromapKey] = useState("");
   const [voicevoxSpeaker, setVoicevoxSpeaker] = useState("2");
   const [googleTtsType, setGoogleTtsType] = useState(process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE && process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE !== "" ? process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE : "");
@@ -60,7 +60,7 @@ export default function Home() {
   const { t } = useTranslation();
   const INTERVAL_MILL_SECONDS_RETRIEVING_COMMENTS = 5000; // 5秒
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(
-    process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_PATH !== undefined ? process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_PATH : "/bg-c.png"
+    process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_PATH !== undefined ? process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_PATH : "/bg-c-0619.png"
   );
   const [dontShowIntroduction, setDontShowIntroduction] = useState(false);
   const [gsviTtsServerUrl, setGSVITTSServerUrl] = useState(process.env.NEXT_PUBLIC_LOCAL_TTS_URL && process.env.NEXT_PUBLIC_LOCAL_TTS_URL !== "" ? process.env.NEXT_PUBLIC_LOCAL_TTS_URL : "http://127.0.0.1:5000/tts");
@@ -80,6 +80,9 @@ export default function Home() {
   const decrementChatProcessingCount = () => {
     setChatProcessingCount(prevCount => prevCount - 1);
   }
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [windowHeight, setWindowHeight] = useState<number>(0);
 
   useEffect(() => {
     const storedData = window.localStorage.getItem("chatVRMParams");
@@ -118,7 +121,45 @@ export default function Home() {
       setGSVITTSBatchSize(params.gsviTtsBatchSize || 2);
       setGSVITTSSpeechRate(params.gsviTtsSpeechRate || 1.0);
     }
+    const script = document.createElement('script');
+    script.src = '/js/bcq.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    // // 在客戶端初始化窗口高度
+    // setWindowHeight(window.innerHeight);
+
+    const adjustHeight = () => {
+      setWindowHeight(window.innerHeight);
+      window.scrollTo(0, 0);
+    };
+
+    const handleResize = () => {
+      adjustHeight();
+      // 在這裡可以添加其他需要在 resize 時執行的邏輯
+    };
+  
+    // 初始調整
+    adjustHeight();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      document.body.removeChild(script);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
+
+  useEffect(() => {
+    // 當 windowHeight 改變時，我們可以在這裡更新 canvas 的大小
+    if (canvasRef.current) {
+      const canvas = canvasRef.current;
+      canvas.width = window.innerWidth;
+      canvas.height = windowHeight;
+      
+      // 在這裡可以添加重新繪製 canvas 內容的邏輯
+    }
+  }, [windowHeight]);
 
   useEffect(() => {
     const params = {
@@ -614,9 +655,9 @@ export default function Home() {
 
   return (
     <>
-      <div className={"font-M_PLUS_2"} style={{ backgroundImage: `url(${buildUrl(backgroundImageUrl)})`, backgroundSize: 'cover', minHeight: '100vh' }}>
+      <div id="bcq" className={"font-M_PLUS_2"} style={{ backgroundImage: `url(${buildUrl(backgroundImageUrl)})`, backgroundSize: 'cover', minHeight: '100vh' }}>
         <Meta />
-        {!dontShowIntroduction && (
+        {/* {!dontShowIntroduction && (
           <Introduction
             dontShowIntroduction={dontShowIntroduction}
             onChangeDontShowIntroduction={setDontShowIntroduction}
@@ -624,7 +665,7 @@ export default function Home() {
             setSelectLanguage={setSelectLanguage}
             setSelectVoiceLanguage={setSelectVoiceLanguage}
           />
-        )}
+        )} */}
         <VrmViewer />
         <MessageInputContainer
           isChatProcessing={chatProcessing}
