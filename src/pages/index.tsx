@@ -401,6 +401,17 @@ export default function Home() {
             }
 
             switch (answerInput?.getAttribute('data-answer-type')) {
+              case 'name':
+                // 分析回應中的年齡
+                const nameMatch = currentAssistantMessage.match(/好的，我可以稱呼您是?(.+)。/);
+                if (nameMatch && nameMatch[1]) {
+                  const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+                  if (nameInput) {
+                    nameInput.value = nameMatch[1];
+                    answerInput.setAttribute('data-answer-type', 'nameget');
+                  }
+                }
+                break;
               case 'age':
                 // 分析回應中的年齡
                 const ageMatch = currentAssistantMessage.match(/好的，您今年(\d+)歲/);
@@ -579,6 +590,32 @@ export default function Home() {
         const answerInput = document.getElementById('answerInput') as HTMLTextAreaElement;
         if (answerInput) {
           switch (answerInput?.getAttribute('data-answer-type')) {
+            case 'name':
+              messageLog = [
+                { role: "user", content: newMessage },
+              ];
+              messages = [
+                {
+                  role: "system",
+                  content: `You will act and converse as one of user’s close friends from now on.
+
+這邊是 user 對他姓名的回答，姓名是常見的中文姓名，通常是兩到四個字，請你根據使用者輸入的內容，判斷他的姓名，並且回答：「好的，我可以稱呼您是{姓名}」，不要講其他無關的話。
+
+例如：
+姓名：張曼娟
+請回答：「好的，我可以稱呼您是張曼娟」
+
+姓名：許家寶言午許家庭的家寶貝的寶
+請回答：「好的，我可以稱呼您是許家寶」
+
+Please respond with the most appropriate conversation line.
+Please answer in Traditional Chinese and use Mandarin commonly used in Taiwan as much as possible.
+Do not use polite or formal speech.
+                  `,
+                },
+                ...messageLog,
+              ];
+              break;
             case 'age':
               messageLog = [
                 { role: "user", content: newMessage },
@@ -797,6 +834,25 @@ Do not use polite or formal speech.
       const answerInput = document.getElementById('answerInput') as HTMLTextAreaElement;
       if (answerInput) {
         switch (answerInput?.getAttribute('data-answer-type')) {
+          case 'nameget':
+            console.log("nameget");
+
+            (window as any).bcqFunctions.fetchTTS("你今年幾歲?", () => {
+              answerInput.setAttribute('data-answer-type', 'age');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+
+              // 找到年齡輸入框並設置焦點
+              const ageInput = document.querySelector('input[name="age"]') as HTMLInputElement;
+              if (ageInput) {
+                ageInput.focus();
+              }
+            });
+            break;
           case 'ageget':
             console.log("ageget");
 

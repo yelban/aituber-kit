@@ -41,7 +41,7 @@ export const MessageInputContainer = ({
         }
 
         switch (answerInput?.getAttribute('data-answer-type')) {
-          case 'name':
+          case 'name2':
             const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
             if (nameInput) {
               nameInput.value = text;
@@ -62,7 +62,7 @@ export const MessageInputContainer = ({
                     micButton.click();
                   }
 
-                  // 找到姓名輸入框並設置焦點
+                  // 找到年齡輸入框並設置焦點
                   const ageInput = document.querySelector('input[name="age"]') as HTMLInputElement;
                   if (ageInput) {
                     ageInput.focus();
