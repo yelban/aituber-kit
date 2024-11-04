@@ -490,7 +490,7 @@ function submitAnswers() {
 // 全域音頻對象
 let currentAudio = null;
 
-function fetchTTS(text) {
+function fetchTTS(text, callback) {
   console.log('fetchTTS(text)', text);
 
   // 如果有正在播放的音頻，先停止它
@@ -536,6 +536,11 @@ function fetchTTS(text) {
     currentAudio.onended = function() {
       URL.revokeObjectURL(url);
       currentAudio = null;
+
+      // 如果有提供 callback 函數就執行它
+      if (typeof callback === 'function') {
+        callback();
+      }
     };
   })
   .catch(error => {
@@ -612,9 +617,28 @@ startButton.addEventListener('click', function() {
   }, 500);
 
   // 播放語音
-  fetchTTS("哈囉您好！我是你的中醫體質管家，想要了解今天的身體體質建議嗎？一起來檢視看看吧！");
-});
+  fetchTTS("我是你的中醫體質管家，你叫什麼名？", function() {
+    console.log('語音播放結束');
 
+    const answerInput = document.getElementById('answerInput');
+    if (answerInput) {
+      // 設置 data-input-type 屬性的值 = name
+      answerInput.setAttribute('data-answer-type', 'name');
+    }
+
+    // 找到麥克風按鈕並觸發點擊
+    const micButton = document.getElementById('voiceInput');
+    if (micButton) {
+      micButton.click();
+    }
+
+    // 找到姓名輸入框並設置焦點
+    const nameInput = document.querySelector('input[name="name"]');
+    if (nameInput) {
+      nameInput.focus();
+    }
+  });
+});
 // fetchTTS("哈囉您好！我是你的中醫體質管家，想要了解今天的身體體質建議嗎？一起來檢視看看吧！");
 
 // 表單提交事件處理函數
@@ -706,3 +730,8 @@ btn.addEventListener("click", function (event) {
   }
 });
 
+// 將函數掛載到 window 物件
+window.bcqFunctions = {
+  fetchTTS: fetchTTS,
+  // 其他需要暴露的函數...
+};

@@ -357,14 +357,14 @@ export default function Home() {
 
         receivedMessage += value;
 
-        // 返答内容のタグ部分の検出
+        // 檢測回應內容的標籤部分
         const tagMatch = receivedMessage.match(/^\[(.*?)\]/);
         if (tagMatch && tagMatch[0]) {
           tag = tagMatch[0];
           receivedMessage = receivedMessage.slice(tag.length);
         }
 
-        // 返答を一文単位で切り出して処理する
+        // 將回應內容依照句子單位切分並處理
         const sentenceMatch = receivedMessage.match(
           /^(.+[。．！？\n]|.{10,}[、,])/
         );
@@ -375,7 +375,7 @@ export default function Home() {
             .slice(sentence.length)
             .trimStart();
 
-          // 発話不要/不可能な文字列だった場合はスキップ
+          // 如果是不需要/無法發音的字串則跳過
           if (
             !sentence.replace(
               /^[\s\[\(\{「［（【『〈《〔｛«‹〘〚〛〙›»〕》〉』】）］」\}\)\]]+$/g,
@@ -389,10 +389,77 @@ export default function Home() {
           const aiTalks = textsToScreenplay([aiText], koeiroParam);
           aiTextLog += aiText;
 
-          // 文ごとに音声を生成 & 再生、返答を表示
+          // 為每個句子生成並播放語音、顯示回應
           const currentAssistantMessage = sentences.join(" ");
 
           handleSpeakAi(aiTalks[0], () => {
+            console.log("currentAssistantMessage:", currentAssistantMessage);
+
+            const answerInput = document.getElementById('answerInput') as HTMLTextAreaElement;
+            if (answerInput) {
+              answerInput.value = currentAssistantMessage;
+            }
+
+            switch (answerInput?.getAttribute('data-answer-type')) {
+              case 'age':
+                // 分析回應中的年齡
+                const ageMatch = currentAssistantMessage.match(/好的，您今年(\d+)歲/);
+                if (ageMatch && ageMatch[1]) {
+                  const ageInput = document.querySelector('input[name="age"]') as HTMLInputElement;
+                  if (ageInput) {
+                    ageInput.value = ageMatch[1];
+                    answerInput.setAttribute('data-answer-type', 'ageget');
+                  }
+                }
+                break;
+                case 'sex':
+                  // 分析回應中的年齡
+                  const sexMatch = currentAssistantMessage.match(/好的，您的性別是?(.+)。/);
+                  console.log("sexMatch:", sexMatch);
+                  if (sexMatch && sexMatch[1]) {
+                    // 判斷 sexMatch[1] 內容，如果是男或男生或男性則設定為 M，女或女生或女性則設定為 F
+                    const sex = sexMatch[1];
+                    if (sex === '男' || sex === '男生' || sex === '男性') {
+                      const genderInput = document.querySelector('input[name="gender"][value="M"]') as HTMLInputElement;
+                      if (genderInput) {
+                        genderInput.checked = true;
+                      }
+                    } else if (sex === '女' || sex === '女生' || sex === '女性') {
+                      const genderInput = document.querySelector('input[name="gender"][value="F"]') as HTMLInputElement;
+                      if (genderInput) {
+                        genderInput.checked = true;
+                      }
+                    }
+                    answerInput.setAttribute('data-answer-type', 'sexget');
+                  }
+                  break;
+                case 'height':
+                  // 分析回應中的年齡
+                  const heightMatch = currentAssistantMessage.match(/好的，您的身高是?(\d+)公分/);
+                  console.log("heightMatch:", heightMatch);
+                  if (heightMatch && heightMatch[1]) {
+                    // 判斷 heightMatch[1] 內容
+                    const heightInput = document.querySelector('input[name="height"]') as HTMLInputElement;
+                    if (heightInput) {
+                      heightInput.value = heightMatch[1];
+                      answerInput.setAttribute('data-answer-type', 'heightget');
+                    }
+                  }
+                  break;
+                case 'weight':
+                  // 分析回應中的體重
+                  const weightMatch = currentAssistantMessage.match(/好的，您的體重是?(\d+)公斤/);
+                  console.log("weightMatch:", weightMatch);
+                  if (weightMatch && weightMatch[1]) {
+                    // 判斷 weightMatch[1] 內容
+                    const weightInput = document.querySelector('input[name="weight"]') as HTMLInputElement;
+                    if (weightInput) {
+                      weightInput.value = weightMatch[1];
+                      answerInput.setAttribute('data-answer-type', 'weightget');
+                    }
+                  }
+                  break;
+            }
             setAssistantMessage(currentAssistantMessage);
             incrementChatProcessingCount();
           }, () => {
@@ -406,7 +473,7 @@ export default function Home() {
       reader.releaseLock();
     }
 
-    // アシスタントの返答をログに追加
+    // 將助理的回應加入記錄
     const messageLogAssistant: Message[] = [
       ...currentChatLog,
       { role: "assistant", content: aiTextLog },
@@ -420,7 +487,7 @@ export default function Home() {
   }, [chatLog, processAIResponse]);
 
   /**
-   * アシスタントとの会話を行う
+   * 與助理進行對話
    */
   const handleSendChat = useCallback(
     async (text: string, role?: string) => {
@@ -503,20 +570,103 @@ export default function Home() {
         }
 
         setChatProcessing(true);
-        // ユーザーの発言を追加して表示
-        const messageLog: Message[] = [
-          ...chatLog,
-          { role: "user", content: newMessage },
-        ];
-        setChatLog(messageLog);
+        
 
-        const messages: Message[] = [
-          {
-            role: "system",
-            content: systemPrompt,
-          },
-          ...messageLog.slice(-10),
-        ];
+        let messageLog: Message[] = [];
+        let messages: Message[] = [];
+        
+        // 讀取 textarea 的 data-answer-type 屬性
+        const answerInput = document.getElementById('answerInput') as HTMLTextAreaElement;
+        if (answerInput) {
+          switch (answerInput?.getAttribute('data-answer-type')) {
+            case 'age':
+              messageLog = [
+                { role: "user", content: newMessage },
+              ];
+              messages = [
+                {
+                  role: "system",
+                  content: `You will act and converse as one of user’s close friends from now on.
+這邊是 user 對他年齡的回答，請你判斷他回答的年齡的數字，並且回答：「好的，您今年{年齡}歲」，不要講其他無關的話。
+
+Please answer in Traditional Chinese and use Mandarin commonly used in Taiwan as much as possible.
+Do not use polite or formal speech.
+Now, let's start the conversation.
+                  `,
+                },
+                ...messageLog,
+              ];
+              break;
+            case 'sex':
+              messageLog = [
+                { role: "user", content: newMessage },
+              ];
+              messages = [
+                {
+                  role: "system",
+                  content: `You will act and converse as one of user’s close friends from now on.
+這邊是 user 對他性別的回答，請你判斷他回答的性別，並且回答：「好的，您的性別是{性別}」，不要講其他無關的話。
+
+Please respond with the most appropriate conversation line.
+Please answer in Traditional Chinese and use Mandarin commonly used in Taiwan as much as possible.
+Do not use polite or formal speech.
+                  `,
+                },
+                ...messageLog,
+              ];
+              break;
+            case 'height':
+              messageLog = [
+                { role: "user", content: newMessage },
+              ];
+              messages = [
+                {
+                  role: "system",
+                  content: `You will act and converse as one of user’s close friends from now on.
+這邊是 user 對他身高的回答，請你判斷他回答的身高的數字，並且回答：「好的，您的身高是{身高}公分」，不要講其他無關的話。
+
+Please respond with the most appropriate conversation line.
+Please answer in Traditional Chinese and use Mandarin commonly used in Taiwan as much as possible.
+Do not use polite or formal speech.
+                  `,
+                },
+                ...messageLog,
+              ];
+              break;
+            case 'weight':
+              messageLog = [
+                { role: "user", content: newMessage },
+              ];
+              messages = [
+                {
+                  role: "system",
+                  content: `You will act and converse as one of user’s close friends from now on.
+這邊是 user 對他體重的回答，請你判斷他回答的體重的數字，並且回答：「好的，您的體重是{體重}公斤」，不要講其他無關的話。
+
+Please respond with the most appropriate conversation line.
+Please answer in Traditional Chinese and use Mandarin commonly used in Taiwan as much as possible.
+Do not use polite or formal speech.
+                  `,
+                },
+                ...messageLog,
+              ];
+              break;
+            default:
+              messageLog = [
+                ...chatLog,
+                { role: "user", content: newMessage },
+              ];
+              messages = [
+                {
+                  role: "system",
+                  content: systemPrompt,
+                },
+                ...messageLog.slice(-10),
+              ];
+              break;
+          }
+          setChatLog(messageLog);
+        }
 
         try {
           await processAIResponse(messageLog, messages);
@@ -642,6 +792,54 @@ export default function Home() {
 
   useEffect(() => {
     console.log("chatProcessingCount:", chatProcessingCount);
+
+    if (chatProcessingCount < 1) {
+      const answerInput = document.getElementById('answerInput') as HTMLTextAreaElement;
+      if (answerInput) {
+        switch (answerInput?.getAttribute('data-answer-type')) {
+          case 'ageget':
+            console.log("ageget");
+
+            (window as any).bcqFunctions.fetchTTS("請告訴我你的性別是男生還是女生？", () => {
+              answerInput.setAttribute('data-answer-type', 'sex');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+            });
+            break;
+          case 'sexget':
+            console.log("sexget");
+
+            (window as any).bcqFunctions.fetchTTS("請問您的身高多少公分？", () => {
+              answerInput.setAttribute('data-answer-type', 'height');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+            });
+            break;
+          case 'heightget':
+            console.log("heightget");
+
+            (window as any).bcqFunctions.fetchTTS("請告訴我您的體重多少公斤？", () => {
+              answerInput.setAttribute('data-answer-type', 'weight');
+            });
+            
+            // 找到麥克風按鈕並觸發點擊
+            const micButton = document.getElementById('voiceInput');
+            if (micButton) {
+              micButton.click();
+            }
+            break;
+        }
+      }
+    }
+
     fetchAndProcessCommentsCallback();
   }, [chatProcessingCount, youtubeLiveId, youtubeApiKey, conversationContinuityMode]);
 
@@ -655,7 +853,7 @@ export default function Home() {
 
   return (
     <>
-      <div style={{ backgroundImage: `url(${buildUrl(backgroundImageUrl)})`, backgroundSize: 'cover', minHeight: '100vh' }}>
+      <div id="bcq" style={{ backgroundImage: `url(${buildUrl(backgroundImageUrl)})`, backgroundSize: 'cover', minHeight: '100vh' }}>
         <Meta />
         {/* {!dontShowIntroduction && (
           <Introduction

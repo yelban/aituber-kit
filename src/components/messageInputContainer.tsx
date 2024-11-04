@@ -8,9 +8,9 @@ type Props = {
 };
 
 /**
- * テキスト入力と音声入力を提供する
+ * 提供文字輸入和語音輸入
  *
- * 音声認識の完了時は自動で送信し、返答文の生成中は入力を無効化する
+ * 當語音辨識完成時自動發送，當生成回覆文字時無效化輸入
  *
  */
 export const MessageInputContainer = ({
@@ -23,23 +23,76 @@ export const MessageInputContainer = ({
     useState<SpeechRecognition>();
   const [isMicRecording, setIsMicRecording] = useState(false);
 
-  // 音声認識の結果を処理する
+  // 處理語音辨識結果
   const handleRecognitionResult = useCallback(
     (event: SpeechRecognitionEvent) => {
       const text = event.results[0][0].transcript;
       setUserMessage(text);
 
-      // 発言の終了時
+      // 當語音辨識完成時
       if (event.results[0].isFinal) {
         setUserMessage(text);
-        // 返答文の生成を開始
-        onChatProcessStart(text);
+
+        // 檢查 textarea 的 data-answer-type 屬性
+        const answerInput = document.getElementById('answerInput') as HTMLTextAreaElement;
+        // 清除 textarea 的值
+        if (answerInput) {
+          answerInput.value = '';
+        }
+
+        switch (answerInput?.getAttribute('data-answer-type')) {
+          case 'name':
+            const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+            if (nameInput) {
+              nameInput.value = text;
+              setTimeout(() => {
+                setUserMessage('');
+              }, 1000);
+
+              // 呼叫 bcq.js 中的函數
+              (window as any).bcqFunctions.fetchTTS("你今年幾歲?", () => {
+                const answerInput = document.getElementById('answerInput');
+                if (answerInput) {
+                  // 設置 data-input-type 屬性的值 = name
+                  answerInput.setAttribute('data-answer-type', 'age');
+
+                  // 找到麥克風按鈕並觸發點擊
+                  const micButton = document.getElementById('voiceInput');
+                  if (micButton) {
+                    micButton.click();
+                  }
+
+                  // 找到姓名輸入框並設置焦點
+                  const ageInput = document.querySelector('input[name="age"]') as HTMLInputElement;
+                  if (ageInput) {
+                    ageInput.focus();
+                  }
+                }
+              });
+            }
+            break;
+          // case 'age':
+          //   // 開始生成回覆文字
+          //   onChatProcessStart(text);
+          //   // const ageInput = document.querySelector('input[name="age"]') as HTMLInputElement;
+          //   // if (ageInput) {
+          //   //   ageInput.value = text;
+          //   // }
+          //   break;
+          default:
+            // 開始生成回覆文字
+            onChatProcessStart(text);
+            break;
+        }
+
+        // // 開始生成回覆文字
+        // onChatProcessStart(text);
       }
     },
     [onChatProcessStart]
   );
 
-  // 無音が続いた場合も終了する
+  // 當持續沒有聲音時也會結束
   const handleRecognitionEnd = useCallback(() => {
     setIsMicRecording(false);
   }, []);
