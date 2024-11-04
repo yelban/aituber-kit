@@ -7,6 +7,25 @@ body {
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
+
+  font-family: 
+    /* 通用無襯線字體 */
+    -apple-system, BlinkMacSystemFont, /* macOS, iOS */
+    'Segoe UI', /* Windows */
+    Roboto, /* Android */
+    Oxygen-Sans, Ubuntu, Cantarell, /* Linux 桌面環境 */
+    'Helvetica Neue', sans-serif,
+
+    /* 繁體中文字體 */
+    'PingFang TC', /* macOS, iOS 繁體中文 */
+    'Microsoft JhengHei', /* Windows 繁體中文 */
+    'Noto Sans TC', /* 多平台支援的繁體中文 Google 字體 */
+    'Source Han Sans TC', /* 思源黑體 繁體 */
+    'Apple LiGothic', /* 舊版 macOS */
+    'WenQuanYi Micro Hei', /* Linux */
+
+    /* 標準的無襯線字體 */
+    sans-serif;
 }
 
 @layer components {

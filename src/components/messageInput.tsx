@@ -41,6 +41,8 @@ export const MessageInput = ({
         <div className="mx-auto max-w-4xl p-16">
           <div className="grid grid-flow-col gap-[8px] grid-cols-[min-content_1fr_min-content]">
             <IconButton
+              id="voiceInput"
+              aria-label="24/Microphone"
               iconName="24/Microphone"
               className="bg-secondary hover:bg-secondary-hover active:bg-secondary-press disabled:bg-secondary-disabled"
               isProcessing={isMicRecording}
@@ -48,6 +50,8 @@ export const MessageInput = ({
               onClick={onClickMicButton}
             />
             <textarea
+              id="answerInput"
+              data-answer-type="both"
               placeholder={t('EnterYourQuestion')}
               onChange={onChangeUserMessage}
               onKeyDown={handleKeyPress}

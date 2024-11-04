@@ -1,9 +1,9 @@
 import { buildUrl } from "@/utils/buildUrl";
 import Head from "next/head";
 export const Meta = () => {
-  const title = "AITuberキット";
+  const title = "BCQ AI 體質量表";
   const description =
-    "WebブラウザだけでAIキャラと会話を楽しむことができ、Youtubeで配信することもできます。";
+    "個人化 AI 中醫體質量表";
   const imageUrl = "https://github.com/tegnike/aituber-kit/assets/35606144/a958f505-72f9-4665-ab6c-b57b692bb166";
   return (
     <Head>
@@ -11,11 +11,11 @@ export const Meta = () => {
       <meta name="description" content={description} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={imageUrl} />
-      <meta name="twitter:card" content="summary_large_image" />
+      {/* <meta property="og:image" content={imageUrl} /> */}
+      {/* <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={imageUrl} />
+      <meta name="twitter:image" content={imageUrl} /> */}
     </Head>
   );
 };
