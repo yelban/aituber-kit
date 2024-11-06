@@ -157,7 +157,7 @@ var formContent = `
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             width="18"             /* 增加 SVG 寬度 */
-            height=18"            /* 增加 SVG 高度 */
+            height="18"            /* 增加 SVG 高度 */
             viewBox="0 0 24 24" 
             fill="none" 
             stroke="currentColor" 
@@ -1084,6 +1084,7 @@ agreeBtn.addEventListener('click', () => {
       console.log('語音播放結束');
 
       const answerInput = document.getElementById('answerInput');
+      console.log('answerInput:', answerInput);
       if (answerInput) {
         // 設置 data-input-type 屬性的值 = name
         answerInput.setAttribute('data-answer-type', 'name');
@@ -1091,12 +1092,14 @@ agreeBtn.addEventListener('click', () => {
 
       // 找到麥克風按鈕並觸發點擊
       const micButton = document.getElementById('voiceInput');
+      console.log('micButton:', micButton);
       if (micButton) {
         micButton.click();
       }
 
       // 找到姓名輸入框並設置焦點
       const nameInput = document.querySelector('input[name="name"]');
+      console.log(nameInput);
       if (nameInput) {
         nameInput.focus();
       }

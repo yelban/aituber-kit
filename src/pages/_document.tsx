@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="zh-Hant-TW">
       <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        {/* <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
@@ -13,7 +13,7 @@ export default function Document() {
         <link
           href="https://fonts.googleapis.com/css2?family=M+PLUS+2&family=Montserrat&display=swap"
           rel="stylesheet"
-        />
+        /> */}
       </Head>
       <body>
         <Main />

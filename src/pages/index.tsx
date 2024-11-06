@@ -426,10 +426,14 @@ export default function Home() {
               case 'name':
                 // 分析回應中的年齡
                 const nameMatch = currentAssistantMessage.match(/好的，我可以稱呼您是?(.+)。/);
+                console.log('nameMatch:', nameMatch);
                 if (nameMatch && nameMatch[1]) {
+                  console.log('nameInput exists:', !!document.querySelector('input[name="name"]'));
                   const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+                  console.log('nameInput value before:', nameInput?.value);
                   if (nameInput) {
                     nameInput.value = nameMatch[1];
+                    console.log('nameInput value after:', nameInput.value);
                     answerInput.setAttribute('data-answer-type', 'nameget');
                   }
                 }
@@ -457,7 +461,7 @@ export default function Home() {
                       if (genderInput) {
                         genderInput.checked = true;
                       }
-                    } else if (sex === '女' || sex === '女生' || sex === '女性') {
+                    } else if (sex === '女' || sex === '女生' || sex === '女性' || sex === '其它') {
                       const genderInput = document.querySelector('input[name="gender"][value="F"]') as HTMLInputElement;
                       if (genderInput) {
                         genderInput.checked = true;
