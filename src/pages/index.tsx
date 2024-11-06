@@ -84,6 +84,8 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [windowHeight, setWindowHeight] = useState<number>(0);
 
+  const [isAssistantTextPositioned, setIsAssistantTextPositioned] = useState(false);
+
   useEffect(() => {
     const storedData = window.localStorage.getItem("chatVRMParams");
     if (storedData) {
@@ -313,6 +315,26 @@ export default function Home() {
     setChatProcessing(true);
     let stream;
 
+    const dialogBox = document.getElementById('dialogBox');
+    if (dialogBox) {
+      dialogBox.style.display = 'none';
+    }
+
+    const assistantText = document.getElementById('assistantText');
+    if (assistantText) {
+      assistantText.style.display = 'block';
+      
+      if (!isAssistantTextPositioned) {
+        const agentTagElement = document.getElementById('agentTag')
+        if (agentTagElement) {
+          const agentTagRect = agentTagElement.getBoundingClientRect()
+          console.log(agentTagRect)
+          assistantText.style.top = `${agentTagRect.top + 50}px`
+          setIsAssistantTextPositioned(true)
+        }
+      }
+    }
+
     const _openAiKey = openAiKey && openAiKey !== "" ? openAiKey : process.env.NEXT_PUBLIC_OPEN_AI_KEY || "";
     const _anthropicKey = anthropicKey && anthropicKey !== "" ? anthropicKey : process.env.NEXT_PUBLIC_ANTHROPIC_KEY || "";
     const _googleKey = googleKey && googleKey !== "" ? googleKey : process.env.NEXT_PUBLIC_GOOGLE_KEY || "";
@@ -470,6 +492,65 @@ export default function Home() {
                     }
                   }
                   break;
+                case 'done':
+                  const doneMatch = currentAssistantMessage.match(/好的，(.+)，/);
+                  console.log("doneMatch:", doneMatch);
+                  if (doneMatch && doneMatch[1]) {
+                    // 判斷 sexMatch[1] 內容，如果是男或男生或男性則設定為 M，女或女生或女性則設定為 F
+                    const done = doneMatch[1];
+                    if (done === '資料正確' || done === '正確' || done === '都對') {
+                      const closeBtn = document.getElementById('closeBtn') as HTMLButtonElement;
+                      if (closeBtn) {
+                        closeBtn.style.backgroundColor = '#004099';
+                        closeBtn.style.color = '#fff';
+                        setTimeout(() => {
+                          closeBtn.click();
+                        }, 2500);
+                      }
+
+                      answerInput.setAttribute('data-answer-type', 'doneget');
+                    } else if (done === '資料不對' || done === '不對' || done === '有錯') {
+                      const closeBtn = document.getElementById('closeBtn') as HTMLButtonElement;
+                      if (closeBtn) {
+                        closeBtn.style.backgroundColor = '#004099';
+                        closeBtn.style.color = '#fff';
+                      }
+
+                      answerInput.setAttribute('data-answer-type', 'retry');
+
+                      // (window as any).bcqFunctions.fetchTTS("請自行修改有問題的欄位後，按下完成按鈕。或繼續語音回答，請問該怎麼稱呼您？", () => {
+                      //   answerInput.setAttribute('data-answer-type', 'name');
+          
+                      //   // 找到麥克風按鈕並觸發點擊
+                      //   const micButton = document.getElementById('voiceInput');
+                      //   if (micButton) {
+                      //     micButton.click();
+                      //   }
+          
+                      //   // 找到姓名輸入框並設置焦點
+                      //   const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+                      //   if (nameInput) {
+                      //     nameInput.focus();
+                      //     nameInput.click();
+                      //   }
+                      // });
+                    }
+                    // answerInput.setAttribute('data-answer-type', 'doneget');
+                  }
+                  break;
+                case 'answer':
+                  const answerMatch = currentAssistantMessage.match(/好的，您的選擇是?(\d+)。/);
+                  if (answerMatch && answerMatch[1]) {
+                    const targetButton = document.querySelector(`button[data-value="${answerMatch[1]}"]`) as HTMLInputElement;
+                    if (targetButton) {
+                      // 模擬點擊按鈕
+                      setTimeout(() => {
+                        targetButton.click();
+                        answerInput.setAttribute('data-answer-type', 'answerget');
+                      }, 1500);
+                    }
+                  }
+                  break;
             }
             setAssistantMessage(currentAssistantMessage);
             incrementChatProcessingCount();
@@ -491,7 +572,7 @@ export default function Home() {
     ];
     setChatLog(messageLogAssistant);
     setChatProcessing(false);
-  }, [selectAIService, openAiKey, selectAIModel, anthropicKey, googleKey, localLlmUrl, groqKey, difyKey, difyUrl, koeiroParam, handleSpeakAi]);
+  }, [selectAIService, openAiKey, selectAIModel, anthropicKey, googleKey, localLlmUrl, groqKey, difyKey, difyUrl, koeiroParam, handleSpeakAi, isAssistantTextPositioned]);
 
   const preProcessAIResponse = useCallback(async (messages: Message[]) => {
     await processAIResponse(chatLog, messages);
@@ -509,7 +590,7 @@ export default function Home() {
       }
 
       if (webSocketMode) {
-        // 未メンテなので不具合がある可能性あり
+        // 未メンテなので不具��がある可能性あり
         console.log("websocket mode: true")
         setChatProcessing(true);
 
@@ -688,6 +769,79 @@ Do not use polite or formal speech.
                 ...messageLog,
               ];
               break;
+            case 'done':
+              messageLog = [
+                { role: "user", content: newMessage },
+              ];
+              messages = [
+                {
+                  role: "system",
+                  content: `You will act and converse as one of user’s close friends from now on.
+這邊是 user 對資料正確與否的回答，請你判斷他的意思，是正確還是不正確(需要修改)，如果正確，就回答：「好的，{資料正確與否}，那我們開始囉！」，如果需要修改，就回答：「好的，{資料正確與否}，請稍候！」，不要講其他無關的話。
+
+例如：
+user 回答：正確喔
+請回答：「好的，資料正確，那我們開始囉！」
+
+user 回答：不對
+請回答：「好的，資料不對，請稍候！」
+
+Please answer in Traditional Chinese and use Mandarin commonly used in Taiwan as much as possible.
+Do not use polite or formal speech.
+Now, let's start the conversation.
+                  `,
+                },
+                ...messageLog,
+              ];
+              break;
+            case 'answer':
+              messageLog = [
+                { role: "user", content: newMessage },
+              ];
+              messages = [
+                {
+                  role: "system",
+                  content: `You will act and converse as one of user’s close friends from now on.
+這邊是 user 對問題選項的回答，請你判斷他的意思，是選擇第幾個選項，並且回答：「好的，您的選擇是{選擇}。」，不要講其他無關的話。
+
+例如：
+user 回答：完全不會
+請回答：「好的，您的選擇是1。」
+
+user 回答：從來沒有
+請回答：「好的，您的選擇是1。」
+
+user 回答：稍微會
+請回答：「好的，您的選擇是2。」
+
+user 回答：偶爾有
+請回答：「好的，您的選擇是2。」
+
+user 回答：中等程度會
+請回答：「好的，您的選擇是3。」
+
+user 回答：一半有一半沒有
+請回答：「好的，您的選擇是3。」
+
+user 回答：很會
+請回答：「好的，您的選擇是4。」
+
+user 回答：常常有
+請回答：「好的，您的選擇是4。」
+
+user 回答：最嚴重會
+請回答：「好的，您的選擇是5。」
+
+user 回答：一直都有
+請回答：「好的，您的選擇是5。」
+Please answer in Traditional Chinese and use Mandarin commonly used in Taiwan as much as possible.
+Do not use polite or formal speech.
+Now, let's start the conversation.
+                  `,
+                },
+                ...messageLog,
+              ];
+              break;
             default:
               messageLog = [
                 ...chatLog,
@@ -834,8 +988,62 @@ Do not use polite or formal speech.
       const answerInput = document.getElementById('answerInput') as HTMLTextAreaElement;
       if (answerInput) {
         switch (answerInput?.getAttribute('data-answer-type')) {
+          case 'initial':
+            console.log("initial");
+
+            (window as any).bcqFunctions.fetchTTS("為了增加體質分類的準確性，請協助我完成基本資料填寫。首先請告訴我您的姓名。", () => {
+              answerInput.setAttribute('data-answer-type', 'name');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+
+              // 找到姓名輸入框並設置焦點
+              const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+              if (nameInput) {
+                nameInput.focus();
+                nameInput.click();
+              }
+            });
+            break;
           case 'nameget':
             console.log("nameget");
+
+            (window as any).bcqFunctions.fetchTTS("請告訴我你的性別是男生還是女生？", () => {
+              answerInput.setAttribute('data-answer-type', 'sex');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+            });
+
+            break;
+          case 'ageget':
+            console.log("ageget");
+
+            (window as any).bcqFunctions.fetchTTS("請問您的身高多少公分？", () => {
+              answerInput.setAttribute('data-answer-type', 'height');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+              
+              // 找到身高輸入框並設置焦點
+              const heightInput = document.querySelector('input[name="height"]') as HTMLInputElement;
+              if (heightInput) {
+                heightInput.focus();
+                heightInput.click();
+              }
+            });
+            break;
+          case 'sexget':
+            console.log("sexget");
 
             (window as any).bcqFunctions.fetchTTS("你今年幾歲?", () => {
               answerInput.setAttribute('data-answer-type', 'age');
@@ -850,32 +1058,7 @@ Do not use polite or formal speech.
               const ageInput = document.querySelector('input[name="age"]') as HTMLInputElement;
               if (ageInput) {
                 ageInput.focus();
-              }
-            });
-            break;
-          case 'ageget':
-            console.log("ageget");
-
-            (window as any).bcqFunctions.fetchTTS("請告訴我你的性別是男生還是女生？", () => {
-              answerInput.setAttribute('data-answer-type', 'sex');
-
-              // 找到麥克風按鈕並觸發點擊
-              const micButton = document.getElementById('voiceInput');
-              if (micButton) {
-                micButton.click();
-              }
-            });
-            break;
-          case 'sexget':
-            console.log("sexget");
-
-            (window as any).bcqFunctions.fetchTTS("請問您的身高多少公分？", () => {
-              answerInput.setAttribute('data-answer-type', 'height');
-
-              // 找到麥克風按鈕並觸發點擊
-              const micButton = document.getElementById('voiceInput');
-              if (micButton) {
-                micButton.click();
+                ageInput.click();
               }
             });
             break;
@@ -884,13 +1067,58 @@ Do not use polite or formal speech.
 
             (window as any).bcqFunctions.fetchTTS("請告訴我您的體重多少公斤？", () => {
               answerInput.setAttribute('data-answer-type', 'weight');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+
+              // 找到體重輸入框並設置焦點
+              const weightInput = document.querySelector('input[name="weight"]') as HTMLInputElement;
+              if (weightInput) {
+                weightInput.focus();
+                weightInput.click();
+              }
             });
+            break;
+          case 'weightget':
+            console.log("weightget");
             
-            // 找到麥克風按鈕並觸發點擊
-            const micButton = document.getElementById('voiceInput');
-            if (micButton) {
-              micButton.click();
-            }
+            (window as any).bcqFunctions.fetchTTS("謝謝您，您的基本資料如上，如果正確請告訴我，以便開始進行問答。如果想修改也請跟我說。", () => {
+              answerInput.setAttribute('data-answer-type', 'done');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+            });
+            break;
+          case 'retry':
+            console.log("retry");
+
+            (window as any).bcqFunctions.fetchTTS("請自行修改有問題的欄位後，按下完成按鈕。或繼續語音回答，請問該怎麼稱呼您？", () => {
+              answerInput.setAttribute('data-answer-type', 'name');
+
+              // 找到麥克風按鈕並觸發點擊
+              const micButton = document.getElementById('voiceInput');
+              if (micButton) {
+                micButton.click();
+              }
+
+              // 找到姓名輸入框並設置焦點
+              const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+              if (nameInput) {
+                nameInput.focus();
+                nameInput.click();
+              }
+            });
+            break;
+          case 'answerget':
+            console.log("answerget");
+
+
             break;
         }
       }
@@ -909,7 +1137,16 @@ Do not use polite or formal speech.
 
   return (
     <>
-      <div id="bcq" style={{ backgroundImage: `url(${buildUrl(backgroundImageUrl)})`, backgroundSize: 'cover', minHeight: '100vh' }}>
+      <div 
+        id="bcq" 
+        style={{ 
+          backgroundImage: `url(${buildUrl(backgroundImageUrl)})`, 
+          backgroundSize: 'cover',
+          minHeight: '100vh',
+          backgroundPosition: 'center'
+        }}
+        className="bcq-background"
+      >
         <Meta />
         {/* {!dontShowIntroduction && (
           <Introduction

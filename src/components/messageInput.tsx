@@ -36,8 +36,8 @@ export const MessageInput = ({
   };
 
   return (
-    <div className="absolute bottom-0 z-20 w-screen">
-      <div className="bg-base text-black">
+    <div className="absolute bottom-[30px] z-20 w-screen">
+      <div className="text-black">
         <div className="mx-auto max-w-4xl p-16">
           <div className="grid grid-flow-col gap-[8px] grid-cols-[min-content_1fr_min-content]">
             <IconButton

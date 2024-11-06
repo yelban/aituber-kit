@@ -126,36 +126,107 @@ function padZero(num) {
 // 創建彈窗表單的HTML內容
 var formContent = `
   <form>
-    <div class="caption-area bg-[#2b6e6e] p-24">
-      <div class="caption">哈囉您好！<br />
-        我是你的中醫體質管家<br />
-        想要了解今天的身體體質建議嗎？<br />
-        一起來檢視看看吧！<br />
+    <div class="caption-area bg-white rounded-8" style="border: 1px solid #002864;">
+      <div class="mt-4 relative">
+        <label for="name" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">稱呼</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          required 
+          class="w-full bg-[#EDEFF2] rounded-lg focus:outline-none focus:ring-0"
+          style="
+            border: 0px solid #002864;
+            border-radius: 8px;
+            padding: 6px 12px;
+          "
+        />
+        <button 
+          type="button"
+          class="absolute right-4 bg-[#9098A3] flex items-center justify-center"
+          onclick="this.previousElementSibling.value=''"
+          style="
+            padding: 4px;           /* 增加內邊距 */
+            border-radius: 50%;
+            width: 18px;           /* 增加按鈕寬度 */
+            height: 18px;          /* 增加按鈕高度 */
+            right: 12px;
+            top: calc(50% + 0.5rem - 10px);  /* 減少 3px 的偏移 */
+          "
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="18"             /* 增加 SVG 寬度 */
+            height=18"            /* 增加 SVG 高度 */
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2.5"     /* 稍微調整線條粗細 */
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+            style="color: white;"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
-      <div class="mt-16">
-        <label for="name">姓名:</label>
-        <input type="text" id="name" name="name" required>
+      <div class="mt-4 relative">
+        <label for="gender" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">性別</label>
+        <div class="w-full bg-[#EDEFF2] rounded-lg focus:outline-none focus:ring-0"
+          style="
+            border: 0px solid #002864;
+            border-radius: 8px;
+            padding: 6px 12px;
+          "
+        >
+          <div class="flex justify-between">
+            <div class="flex items-center flex-1 justify-center">
+              <input type="radio" id="male" name="gender" value="M" required>
+              <label for="male" class="radio-label ml-4">男性</label>
+            </div>
+            <div class="flex items-center flex-1 justify-center">
+              <input type="radio" id="female" name="gender" value="F" required>
+              <label for="female" class="radio-label ml-4">女性</label>
+            </div>
+          </div>
+        </div>
+      </div>  
+      <div class="mt-4 relative">
+        <label for="age" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">年齡:</label>
+        <input type="number" id="age" name="age" min="15" max="150" required class="w-full bg-[#EDEFF2] rounded-lg focus:outline-none focus:ring-0"
+          style="
+            border: 0px solid #002864;
+            border-radius: 8px;
+            padding: 6px 12px;
+          ">
       </div>
-      <div class="mt-8">
-        <label for="age">年齡:</label>
-        <input type="number" id="age" name="age" min="15" max="150" required>
+      <div class="mt-4 relative">
+        <label for="height" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">身高:</label>
+        <input type="number" id="height" name="height" min="100" max="250" required class="w-full bg-[#EDEFF2] rounded-lg focus:outline-none focus:ring-0"
+          style="
+            border: 0px solid #002864;
+            border-radius: 8px;
+            padding: 6px 12px;
+          ">
       </div>
-      <div class="mt-8">
-        <label>性別:</label>
-        <input type="radio" id="male" name="gender" value="M" required>
-        <label for="male" class="radio-label">男性</label>
-        <input type="radio" id="female" name="gender" value="F" required>
-        <label for="female" class="radio-label">女性</label>
+      <div class="mt-4 relative">
+        <label for="weight" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">體重:</label>
+        <input type="number" id="weight" name="weight" min="15" max="250" required class="w-full bg-[#EDEFF2] rounded-lg focus:outline-none focus:ring-0"
+          style="
+            border: 0px solid #002864;
+            border-radius: 8px;
+            padding: 6px 12px;
+          ">
       </div>
-      <div class="mt-8">
-        <label for="height">身高:</label>
-        <input type="number" id="height" name="height" min="100" max="250" required>
+      <div class="mt-16 relative">
+        <button id="closeBtn" class="float-right bg-[#EDEFF2] rounded-lg hover:bg-[#002864] hover:text-white"
+          style="
+            border: 0px solid #002864;
+            border-radius: 10px;
+            padding: 6px 12px;
+          ">完成</button>
       </div>
-      <div class="mt-8">
-        <label for="weight">體重:</label>
-        <input type="number" id="weight" name="weight" min="15" max="250" required>
-      </div>
-      <button id="closeBtn">開始</button>
     </div>
   </form>
 `;
@@ -163,9 +234,14 @@ var formContent = `
 // 創建彈窗元素
 var popup = document.createElement("div");
 popup.id = "popup";
-popup.style.position = 'absolute';
-popup.style.zIndex = '100';
-popup.classList.add("popup", "bottom-[60px]", "w-[60%]");
+// popup.style.position = 'absolute';
+// popup.style.zIndex = '100';
+popup.style.cssText = `
+  position: absolute;
+  z-index: 100;
+`;
+
+popup.classList.add("popup", "bottom-[100px]", "w-[50%]");
 
 // var left = (document.documentElement.clientWidth - popup.offsetWidth) / 2;
 // var top = 150;
@@ -177,8 +253,8 @@ popup.innerHTML = formContent;
 document.body.appendChild(popup);
 
 var popupDiv = document.getElementById("popup");
-popupDiv.style.left = '50%';
-popupDiv.style.transform = 'translateX(-50%)';
+// popupDiv.style.left = '50%';
+// popupDiv.style.transform = 'translateX(-50%)';
 // popupDiv.style.top = '100px';
 // popupDiv.classList.add("bg-base"); 
 
@@ -186,20 +262,26 @@ function showQuestion(index, data) {
   var question = data[index];
   console.log('question', question);
   var questionElement = document.createElement('div');
-  questionElement.classList.add("question", "bg-[#2b6e6e]", "p-24");
+  questionElement.classList.add("question", "p-16");
   
   // 決定按鈕標籤
   var buttonLabel = index === data.length - 1 ? "提交" : "下一題";
 
   // 建立具有按鈕形狀的選項，套用 Tailwind CSS 樣式
   var optionsHTML = question.options.map(option => `
-    <button class="option-button" data-value="${option.value}">
-      ${option.label}
+    <button class="option-button w-full hover:bg-[#004099] hover:text-white focus:bg-[#004099] focus:text-white active:bg-[#004099] active:text-white" data-value="${option.value}">
+      <div class="flex items-center">
+      <div class="w-[30px] flex-shrink-0">
+        <span class="inline-flex items-center justify-center w-6 h-6 min-w-[24px] min-h-[24px] bg-white text-[#004099] rounded-[50%] font-bold" style="aspect-ratio: 1">${option.value}</span>
+      </div>
+      <div class="text-left flex-grow pl-4">
+        ${option.label}
+      </div>
+    </div>
     </button>
   `).join('');
 
   questionElement.innerHTML = `
-    <h3 class="font-semibold mb-4 question-area">${question.question}</h3>
     <div>
       <div class="options grid grid-cols-1 gap-4">${optionsHTML}</div>
     </div>
@@ -226,29 +308,49 @@ function showQuestion(index, data) {
   form.appendChild(questionElement);
 
   // 發送 TTS API 請求
-  fetchTTS(question.question);
+  fetchTTS(question.question, function() {
+    console.log('語音播放結束', question.question);
+
+      const answerInput = document.getElementById('answerInput');
+      if (answerInput) {
+        // 設置 data-input-type 屬性的值 = name
+        answerInput.setAttribute('data-answer-type', 'answer');
+      }
+
+      // 找到麥克風按鈕並觸發點擊
+      const micButton = document.getElementById('voiceInput');
+      if (micButton) {
+        micButton.click();
+      }
+  });
 
   // 為每個選項按鈕添加點擊事件
   document.querySelectorAll('.option-button').forEach(button => {
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      
       // 存儲選擇的答案
       var selectedOption = this.getAttribute('data-value');
       var answers = JSON.parse(sessionStorage.getItem('answers')) || {};
       answers[question.id] = parseInt(selectedOption, 10);
       sessionStorage.setItem('answers', JSON.stringify(answers));
 
-      // 清除當前題目內容
-      form.innerHTML = '';
+      setTimeout(() => {
+        // 清除當前題目內容
+        form.innerHTML = '';
 
-      // 顯示下一題或完成處理
-      index++;
-      if (index < data.length) {
-        showQuestion(index, data);
-      } else {
-        console.log('問卷完成');
-        // TODO: 進行問卷完成後的處理，例如提交資料至伺服器等
-        submitAnswers();  // 假設有一個函數來處理最終的提交
-      }
+        // 顯示下一題或完成處理
+        index++;
+        if (index < data.length) {
+          setTimeout(() => {
+            showQuestion(index, data);
+          }, 100);
+        } else {
+          console.log('問卷完成');
+          // TODO: 進行問卷完成後的處理，例如提交資料至伺服器等
+          submitAnswers();  // 假設有一個函數來處理最終的提交
+        }
+      }, 500);
     });
   });
 
@@ -493,11 +595,15 @@ let currentAudio = null;
 function fetchTTS(text, callback) {
   console.log('fetchTTS(text)', text);
 
+  showDialogBox(text);
+
   // 如果有正在播放的音頻，先停止它
   if (currentAudio) {
     currentAudio.pause();
     currentAudio.currentTime = 0;
   }
+
+  hideAssistantText();
 
   // 替換文字：將 "乾" 替換為 "甘"，將 "重重的" 替換為 "眾眾的"
   const processedText = text
@@ -548,6 +654,12 @@ function fetchTTS(text, callback) {
   });
 }
 
+// 在頁面載入時隱藏 canvas 元素
+const canvasElement = document.querySelector('canvas')
+
+if (canvasElement) {
+  canvasElement.style.display = 'none'
+}
 
 // 獲取表單元素
 var form = popupDiv.querySelector("form");
@@ -556,89 +668,244 @@ popupDiv.style.display = 'none';
 
 var btn = document.getElementById("closeBtn");
 
-// 創建覆蓋層
+// 修改覆蓋層樣式和內容
 const overlay = document.createElement('div');
-overlay.id = 'startOverlay';
 overlay.style.cssText = `
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255,255,255, 0.6);
   backdrop-filter: blur(5px);
   display: flex;
+  flex-direction: column;  // 縱向排列
   justify-content: center;
   align-items: center;
   z-index: 1000;
 `;
 
-// 創建按鈕
-const startButton = document.createElement('button');
-startButton.id = 'startButton';
-startButton.textContent = '開始體驗';
-startButton.style.cssText = `
-  padding: 10px 20px;
-  font-size: 3em;
-  cursor: pointer;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+// 創建一個容器來包裝主要內容
+const contentContainer = document.createElement('div');
+contentContainer.style.cssText = `
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80%;  // 設定容器高度
+  text-align: center;
 `;
 
-// 添加滑鼠懸停效果
-startButton.onmouseover = function() {
-  this.style.backgroundColor = '#45a049';
-};
-startButton.onmouseout = function() {
-  this.style.backgroundColor = '#4CAF50';
-};
+// 修改標題樣式
+const title = document.createElement('div');
+title.style.cssText = `
+  color: #002964;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+`;
+title.textContent = '中醫體質智析';
 
-// 將按鈕添加到覆蓋層
-overlay.appendChild(startButton);
+// 創建說明文字
+const description = document.createElement('div');
+description.style.cssText = `
+  color: #002964;
+  font-size: 1rem;
+  text-align: center;
+  // margin-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+`;
+description.textContent = '此體驗將蒐集相關個人資訊(毋須真實姓名)與身體狀況';
 
-// 將覆蓋層添加到 body
-document.body.appendChild(overlay);
+// 創建提示文字
+const hint = document.createElement('div');
+hint.style.cssText = `
+  color: #002964;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 20px;
+  // margin-top: -20px;
+`;
+hint.textContent = '請先閱讀並同意下方個資同意書，再進行體驗';
 
-// 添加按鈕點擊事件
-startButton.addEventListener('click', function() {
-  // 淡出效果
-  overlay.style.transition = 'opacity 0.5s ease-out';
-  overlay.style.opacity = '0';
+// 修改連結樣式
+const link = document.createElement('div');
+link.style.cssText = `
+  color: #002964;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 3px;  // 添加這行來增加底線距離
+  cursor: pointer;  // 這邊的游標設定好像沒有作用
+  // margin-bottom: 20px;
+`;
+link.style.cursor = 'pointer' // 確保游標為 pointer
+link.textContent = '閱讀個人資料蒐集、處理及利用同意書';
 
-  popupDiv.style.display = 'block';
+// 創建免責聲明
+const disclaimer = document.createElement('div');
+disclaimer.style.cssText = `
+  color: #002964;
+  font-size: 0.8rem;
+  text-align: center;
+  // position: absolute;
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;  // 確保顯示在其他元素之上
+  // width: 100%;    // 確保寬度為 100%
+  // max-width: 90%; // 可選：設定最大寬度，避免在特寬螢幕上文字過長
+  padding: 0 20px; // 可選：增加左右內邊距
+`;
+disclaimer.style.width = '100%';
+disclaimer.style.color = '#002964';
+disclaimer.textContent = '本體驗僅供瞭解初步體質狀況，無法取代醫療診斷';
 
-  // 等待淡出動畫完成後移除覆蓋層
-  setTimeout(() => {
-    document.body.removeChild(overlay);
+document.body.appendChild(disclaimer);
+
+// 將元素添加到容器中，而不是直接添加到覆蓋層
+contentContainer.appendChild(title);
+contentContainer.appendChild(description);
+contentContainer.appendChild(hint);
+contentContainer.appendChild(link);
+
+// 將容器和免責聲明添加到覆蓋層
+overlay.appendChild(contentContainer);
+
+// 創建同意書對話框
+const privacyDialog = document.createElement('div');
+privacyDialog.style.cssText = `
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  background: transparent;
+  // background-color: rgba(219,215,209, 0.5);
+  z-index: 1001;
+`;
+
+// 添加同意書內容
+privacyDialog.innerHTML = `
+  <div style="
+    background: #002864;
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    font-size: 11px;
+    line-height: 1.6;
+  ">
+    <h2 style="
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+    ">個人資料蒐集、處理及利用同意書</h2>
     
-  }, 500);
+    <div style="margin-bottom: 5px;">
+      友達耘康股份有限公司今為「智慧中醫體質諮詢平台」<br/>
+      辦理中醫體質諮詢體驗、產出體質量表、串聯至使用者帳號等客戶服務以及統計和研究事項(以下簡稱「蒐集目的」)，將蒐集您的性別、年齡、身高體重與健康狀況資料。並依個人資料保護法告知您資料利用之期間、地區、對象及方式如下：
+    </div>
+    
+    <div style="margin-bottom: 3px;">(1)期間：至蒐集目的消滅時止。</div>
+    <div style="margin-bottom: 3px;">(2)地區：中華民國境內及境外。</div>
+    <div style="margin-bottom: 3px;">(3)對象：友達耘康股份有限公司</div>
+    <div style="margin-bottom: 5px;">(4)方式：以自動化機器或其他非自動化之利用方式。</div>
+    
+    <div style="margin-bottom: 20px;">
+      對於您所提供之個人資料，您享有查詢或請求閱覽、請求製給複製本、請求補充或更正、請求停止蒐集、處理或利用、請求刪除之權利，如欲行使前述權利，請聯繫 
+      <span style="text-decoration: underline;">Service@auohealth.com</span>。
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      您若拒絕提供相關個人資料，我們無法進行必要之處理作業，致無法提供您相關服務。
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      如果您同意提供相關個人資料，請按下方同意鍵。
+    </div>
+    
+    
+  </div>
+  <div style="
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    ">
+      <button id="disagreeBtn" style="
+        padding: 10px 30px;
+        background: #002864;
+        color: white;
+        border: 2px solid white;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+      ">不同意，退出體驗</button>
+      
+      <button id="agreeBtn" style="
+        padding: 10px 50px;
+        background: #002864;
+        color: white;
+        border: 2px solid white;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        font-weight: bold;
+      ">同意</button>
+    </div>
+`;
 
-  // 播放語音
-  fetchTTS("我是你的中醫體質管家，你叫什麼名？", function() {
-    console.log('語音播放結束');
+// 將對話框添加到文檔中
+document.body.appendChild(privacyDialog);
 
-    const answerInput = document.getElementById('answerInput');
-    if (answerInput) {
-      // 設置 data-input-type 屬性的值 = name
-      answerInput.setAttribute('data-answer-type', 'name');
-    }
-
-    // 找到麥克風按鈕並觸發點擊
-    const micButton = document.getElementById('voiceInput');
-    if (micButton) {
-      micButton.click();
-    }
-
-    // 找到姓名輸入框並設置焦點
-    const nameInput = document.querySelector('input[name="name"]');
-    if (nameInput) {
-      nameInput.focus();
-    }
-  });
+// 添加事件監聽器
+link.addEventListener('click', () => {
+  privacyDialog.style.display = 'block';
+  overlay.style.backgroundColor = 'rgba(255,255,255,1)';
+  disclaimer.style.color = '#FFF';
 });
+
+// // 添加按鈕點擊事件
+// startButton.addEventListener('click', function() {
+//   // 淡出效果
+//   overlay.style.transition = 'opacity 0.5s ease-out';
+//   overlay.style.opacity = '0';
+
+//   popupDiv.style.display = 'block';
+
+//   // 等待淡出動畫完成後移除覆蓋層
+//   setTimeout(() => {
+//     document.body.removeChild(overlay);
+    
+//   }, 500);
+
+//   // 播放語音
+//   fetchTTS("我是你的中醫體質管家，你叫什麼名？", function() {
+//     console.log('語音播放結束');
+
+//     const answerInput = document.getElementById('answerInput');
+//     if (answerInput) {
+//       // 設置 data-input-type 屬性的值 = name
+//       answerInput.setAttribute('data-answer-type', 'name');
+//     }
+
+//     // 找到麥克風按鈕並觸發點擊
+//     const micButton = document.getElementById('voiceInput');
+//     if (micButton) {
+//       micButton.click();
+//     }
+
+//     // 找到姓名輸入框並設置焦點
+//     const nameInput = document.querySelector('input[name="name"]');
+//     if (nameInput) {
+//       nameInput.focus();
+//     }
+//   });
+// });
 // fetchTTS("哈囉您好！我是你的中醫體質管家，想要了解今天的身體體質建議嗎？一起來檢視看看吧！");
 
 // 表單提交事件處理函數
@@ -647,6 +914,11 @@ btn.addEventListener("click", function (event) {
 
   // var canvases = document.querySelectorAll('canvas');
   // canvases[0].style.marginTop = '50px';
+
+  const answerInput = document.getElementById('answerInput');
+  if (answerInput) {
+    answerInput.setAttribute('data-answer-type', 'answer2');
+  }
 
   // 獲取年齡和性別的值
   var name = form.elements["name"].value;
@@ -730,8 +1002,206 @@ btn.addEventListener("click", function (event) {
   }
 });
 
+
+// 將覆蓋層添加到文檔中
+document.body.appendChild(overlay);
+
+const disagreeBtn = document.getElementById('disagreeBtn');
+
+// 添加滑鼠懸停效果
+disagreeBtn.onmouseover = function() {
+  this.style.backgroundColor = '#003e95';
+};
+disagreeBtn.onmouseout = function() {
+  this.style.backgroundColor = '#002964';
+};
+
+// 添加按鈕事件處理
+disagreeBtn.addEventListener('click', () => {
+  window.location.href = '/'; // 或其他退出處理邏輯
+});
+
+const agreeBtn = document.getElementById('agreeBtn');
+
+// 添加滑鼠懸停效果
+agreeBtn.onmouseover = function() {
+  this.style.backgroundColor = '#003e95';
+};
+agreeBtn.onmouseout = function() {
+  this.style.backgroundColor = '#002964';
+};
+
+agreeBtn.addEventListener('click', () => {
+  // 淡出效果
+  overlay.style.transition = 'opacity 0.5s ease-out';
+  overlay.style.opacity = '0';
+
+  privacyDialog.style.display = 'none';
+  // popupDiv.style.display = 'block';
+  // overlay.style.display = 'none';
+
+  popupDiv.style.display = 'block';
+
+  disclaimer.style.color = '#002964';
+
+  // 顯示 canvas 元素
+  if (canvasElement) {
+    canvasElement.style.display = 'block'
+  }
+
+  // 等待淡出動畫完成後移除覆蓋層
+  setTimeout(() => {
+    document.body.removeChild(overlay);
+    
+  }, 500);
+
+  // 播放語音
+  // const text = "我是你的中醫體質管家，請問你叫什麼名字？";
+  const text = "我是您的中醫體質諮詢師，小若。 您想了解今天的體質狀況嗎？ 我會詢問您幾個問題，最後提供您今天的體質農民曆。";
+  // showDialogBox(text);
+  fetchTTS(text, function() {
+    console.log('語音播放結束');
+
+    const answerInput = document.getElementById('answerInput');
+    if (answerInput) {
+      // 設置 data-input-type 屬性的值 = initial
+      answerInput.setAttribute('data-answer-type', 'initial');
+    }
+
+    // // 找到麥克風按鈕並觸發點擊
+    // const micButton = document.getElementById('voiceInput');
+    // if (micButton) {
+    //   micButton.click();
+    // }
+
+    // // 找到姓名輸入框並設置焦點
+    // const nameInput = document.querySelector('input[name="name"]');
+    // if (nameInput) {
+    //   nameInput.focus();
+    // }
+
+    fetchTTS("為了增加體質分類的準確性，請協助我完成基本資料填寫。首先請問您怎麼稱呼。", function() {
+      console.log('語音播放結束');
+
+      const answerInput = document.getElementById('answerInput');
+      if (answerInput) {
+        // 設置 data-input-type 屬性的值 = name
+        answerInput.setAttribute('data-answer-type', 'name');
+      }
+
+      // 找到麥克風按鈕並觸發點擊
+      const micButton = document.getElementById('voiceInput');
+      if (micButton) {
+        micButton.click();
+      }
+
+      // 找到姓名輸入框並設置焦點
+      const nameInput = document.querySelector('input[name="name"]');
+      if (nameInput) {
+        nameInput.focus();
+      }
+    });
+  });
+});
+
+// 創建左側名稱標籤
+const agentTag = document.createElement('div');
+agentTag.textContent = '歐凱若';
+agentTag.id = 'agentTag';
+agentTag.style.cssText = `
+  position: fixed;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgb(72,238,238);
+  color: rgb(0,128,128);
+  padding: 7px 15px;
+  border-radius: 12px;
+  border: 1px solid rgb(0,128,128);
+  font-size: 0.9rem;
+  font-weight: bold;
+  z-index: 1000;
+  display: none;
+`;
+
+// 將名稱標籤添加到文檔中
+document.body.appendChild(agentTag);
+
+// 創建對話框
+const dialogBox = document.createElement('div');
+dialogBox.id = 'dialogBox';
+dialogBox.textContent = '我會詢問您幾個問題，最後提供專屬今天的體質農民曆。';
+dialogBox.style.cssText = `
+  position: absolute;
+  left: 10px;
+  background-color: white;
+  color: rgb(0, 128, 128);
+  padding: 7px 15px;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 1px solid rgb(0, 128, 128);
+  width: 45%;
+  max-width: 90%;
+  line-height: 1.5;
+  z-index: 1000;
+  white-space: wrap;
+  display: none;
+`;
+
+// 將對話框添加到文檔中
+document.body.appendChild(dialogBox);
+
 // 將函數掛載到 window 物件
 window.bcqFunctions = {
   fetchTTS: fetchTTS,
   // 其他需要暴露的函數...
 };
+
+function showDialogBox(text) {
+  const dialogBox = document.getElementById('dialogBox')
+  const agentTag = document.getElementById('agentTag')
+  
+  if (dialogBox && agentTag) {
+    // 設置初始透明度和位置
+    dialogBox.style.opacity = '0'
+    agentTag.style.opacity = '0'
+    dialogBox.style.transform = 'translateX(-50px)'
+    
+    // 顯示元素
+    dialogBox.style.display = 'block'
+    agentTag.style.display = 'block'
+
+    // 設置 dialogBox 位置
+    if (!window.isDialogBoxPositionSet) {
+      const agentTagElement = document.getElementById('agentTag')
+      if (agentTagElement) {
+        const agentTagRect = agentTagElement.getBoundingClientRect()
+        console.log(agentTagRect)
+        dialogBox.style.top = `${agentTagRect.top + 50}px`
+        window.isDialogBoxPositionSet = true
+      }
+    }
+    
+    // 設置過渡效果 - 同時處理透明度和位置的過渡
+    dialogBox.style.transition = 'opacity 0.5s ease-in, transform 0.5s ease-out'
+    agentTag.style.transition = 'opacity 0.5s ease-in'
+    
+    // 設置文字內容
+    dialogBox.textContent = text
+    
+    // 使用 setTimeout 確保過渡效果生效
+    setTimeout(() => {
+      dialogBox.style.opacity = '1'
+      agentTag.style.opacity = '1'
+      dialogBox.style.transform = 'translateX(0)'
+    }, 10)
+  }
+}
+
+function hideAssistantText() {
+  const assistantText = document.getElementById('assistantText');
+  if (assistantText) {
+    assistantText.style.display = 'none';
+  }
+}

@@ -41,36 +41,39 @@ export const MessageInputContainer = ({
         }
 
         switch (answerInput?.getAttribute('data-answer-type')) {
-          case 'name2':
-            const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
-            if (nameInput) {
-              nameInput.value = text;
-              setTimeout(() => {
-                setUserMessage('');
-              }, 1000);
-
-              // 呼叫 bcq.js 中的函數
-              (window as any).bcqFunctions.fetchTTS("你今年幾歲?", () => {
-                const answerInput = document.getElementById('answerInput');
-                if (answerInput) {
-                  // 設置 data-input-type 屬性的值 = name
-                  answerInput.setAttribute('data-answer-type', 'age');
-
-                  // 找到麥克風按鈕並觸發點擊
-                  const micButton = document.getElementById('voiceInput');
-                  if (micButton) {
-                    micButton.click();
-                  }
-
-                  // 找到年齡輸入框並設置焦點
-                  const ageInput = document.querySelector('input[name="age"]') as HTMLInputElement;
-                  if (ageInput) {
-                    ageInput.focus();
-                  }
-                }
-              });
-            }
+          case 'initial':
+            // 不處理文字生成
             break;
+          // case 'name2':
+          //   const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+          //   if (nameInput) {
+          //     nameInput.value = text;
+          //     setTimeout(() => {
+          //       setUserMessage('');
+          //     }, 1000);
+
+          //     // 呼叫 bcq.js 中的函數
+          //     (window as any).bcqFunctions.fetchTTS("你今年幾歲?", () => {
+          //       const answerInput = document.getElementById('answerInput');
+          //       if (answerInput) {
+          //         // 設置 data-input-type 屬性的值 = name
+          //         answerInput.setAttribute('data-answer-type', 'age');
+
+          //         // 找到麥克風按鈕並觸發點擊
+          //         const micButton = document.getElementById('voiceInput');
+          //         if (micButton) {
+          //           micButton.click();
+          //         }
+
+          //         // 找到年齡輸入框並設置焦點
+          //         const ageInput = document.querySelector('input[name="age"]') as HTMLInputElement;
+          //         if (ageInput) {
+          //           ageInput.focus();
+          //         }
+          //       }
+          //     });
+          //   }
+          //   break;
           // case 'age':
           //   // 開始生成回覆文字
           //   onChatProcessStart(text);
