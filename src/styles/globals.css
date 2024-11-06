@@ -97,7 +97,7 @@ body {
   margin-top: 60px;
   border-radius: 12px;
   border: 1px solid rgb(0,128,128);
-  font-size: 1.28rem;
+  font-size: 1.5rem;
   font-weight: bold;
   z-index: 1000;
   display: none;
@@ -110,7 +110,7 @@ body {
   color: rgb(0, 128, 128);
   padding: 12px 24px;
   border-radius: 15px;
-  font-size: 1.2rem;
+  font-size: 2rem;
   /* font-weight: bold; */
   border: 1px solid rgb(0, 128, 128);
   width: 45%;
@@ -130,7 +130,7 @@ body {
   margin-top: 16px;
   padding: 12px 24px;
   border-radius: 15px;
-  font-size: 1.2rem;
+  font-size: 2rem;
   border: 1px solid rgb(0, 128, 128);
   max-width: 45%;
   line-height: 1.5;
@@ -197,7 +197,7 @@ body {
   width: 457px;
   height: 90px;
   position: absolute;
-  top: 168px;
+  top: 198px;
   left: 50%;
   color: aliceblue;
   font-size: 1.25em;
@@ -220,8 +220,8 @@ body {
 
 #bcq-name {
   position: absolute;
-  top: -0.5em;
-  left: 2.6em;
+  top: 0.5em;
+  left: 3.6em;
   max-width: 9ch; /* 限制寬度為 9 個字元 */
   white-space: nowrap; /* 防止文字換行 */
   overflow: hidden; /* 隱藏超出部分 */
@@ -236,18 +236,18 @@ body {
 
 #bcq-day-hant {
   position: fixed;
-  top: 1.2em;
-  left: 11.6em;
+  top: 2.6em;
+  left: 14em;
 }
 
 #bcq-day-hant img {
-  width: 160px;
-  height: 125px;
+  width: 190px;
+  height: 110px;
 }
 #bcq-type-a {
   position: fixed;
-  top: 5.9em;
-  left: 2.8em;
+  top: 8.2em;
+  left: 3.8em;
 }
 
 #bcq-type-a img {
@@ -257,8 +257,8 @@ body {
 
 #bcq-type-b {
   position: fixed;
-  top: 5.9em;
-  left: 7em;
+  top: 8.2em;
+  left: 9.7em;
 }
 
 #bcq-type-b img {
@@ -268,8 +268,8 @@ body {
 
 #bcq-type-c {
   position: fixed;
-  top: 5.9em;
-  left: 11.1em;
+  top: 8.2em;
+  left: 15.5em;
 }
 
 #bcq-type-c img {
@@ -279,8 +279,8 @@ body {
 
 #bcq-desc {
   position: fixed;
-  top: 7.9em;
-  left: 1em;
+  top: 11em;
+  left: 1.2em;
 }
 
 #bcq-desc img {
@@ -290,26 +290,26 @@ body {
 
 #bcq-yes {
   position: fixed;
-  top: 33em;
-  left: 7.6em;
+  top: 35em;
+  left: 8em;
   color: aliceblue;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   width: 26.8em;
 }
 
 #bcq-no {
   position: fixed;
-  top: 39.6em;
-  left: 7.6em;
+  top: 41.8em;
+  left: 8em;
   color: aliceblue;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   width: 26.8em;
 }
 
 #bcq-qrcode-no {
   /* 移除 right 屬性，改用 left: 50% 和 transform 來置中 */
   position: fixed;
-  bottom: 6em;
+  bottom: 9em;
   left: 50%;
   transform: translateX(-50%);
   background-color: #002B66;
@@ -323,7 +323,7 @@ body {
 
 #bcq-qrcode-yes {
   position: fixed;
-  bottom: 6.6em;  /* 改用 bottom 來設定距離底部的距離 */
+  bottom: 10em;  /* 改用 bottom 來設定距離底部的距離 */
   left: 50%;    /* 設定左邊距為 50% */
   transform: translateX(-50%);  /* 往左移動自身寬度的一半來達到水平置中 */
   border: 15px solid #1a4b8c;
