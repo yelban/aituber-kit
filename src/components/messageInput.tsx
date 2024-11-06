@@ -36,10 +36,10 @@ export const MessageInput = ({
   };
 
   return (
-    <div className="absolute bottom-[30px] z-20 w-screen">
+    <div className="absolute bottom-[68px] z-20 w-screen" id="messageInput">
       <div className="text-black">
         <div className="mx-auto max-w-4xl p-16">
-          <div className="grid grid-flow-col gap-[8px] grid-cols-[min-content_1fr_min-content]">
+          <div className="grid grid-flow-col gap-[16px] grid-cols-[min-content_1fr_min-content]">
             <IconButton
               id="voiceInput"
               aria-label="24/Microphone"
@@ -56,7 +56,7 @@ export const MessageInput = ({
               onChange={onChangeUserMessage}
               onKeyDown={handleKeyPress}
               disabled={isChatProcessing}
-              className="bg-surface1 hover:bg-surface1-hover focus:bg-surface1 disabled:bg-surface1-disabled disabled:text-primary-disabled rounded-16 w-full px-16 text-text-primary typography-16 font-bold disabled"
+              className="bg-surface1 hover:bg-surface1-hover focus:outline-none disabled:bg-surface1-disabled disabled:text-primary-disabled rounded-16 w-full px-16 text-text-primary typography-16 font-bold disabled"
               value={userMessage}
               rows={rows}
               style={{ lineHeight: '1.5', padding: '8px 16px', resize: 'none' }}

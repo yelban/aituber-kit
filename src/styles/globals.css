@@ -86,15 +86,51 @@ body {
   }
 }
 
+#agentTag {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgb(72,238,238);
+  color: rgb(0,128,128);
+  padding: 8px 16px;
+  margin-top: 60px;
+  border-radius: 12px;
+  border: 1px solid rgb(0,128,128);
+  font-size: 1.28rem;
+  font-weight: bold;
+  z-index: 1000;
+  display: none;
+}
+
+#dialogBox {
+  position: absolute;
+  left: 24px;
+  background-color: white;
+  color: rgb(0, 128, 128);
+  padding: 12px 24px;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  /* font-weight: bold; */
+  border: 1px solid rgb(0, 128, 128);
+  width: 45%;
+  max-width: 90%;
+  line-height: 1.5;
+  z-index: 1000;
+  white-space: wrap;
+  display: none;
+}
+
 .assistant-text {
-  left: 10px;
+  left: 24px;
   top: 54%;
   /* transform: translateY(-70%); */
   background-color: white;
   color: rgb(0, 128, 128);
-  padding: 7px 15px;
+  margin-top: 16px;
+  padding: 12px 24px;
   border-radius: 15px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   border: 1px solid rgb(0, 128, 128);
   max-width: 45%;
   line-height: 1.5;
@@ -108,18 +144,19 @@ body {
 }
 
 .popup {
-  right: 16px;
-  width: 45%;
+  right: 24px;
+  width: 40%;
+  bottom: 180px;
 }
 
 .caption-area {
-  padding: 10px; /* 為 div 提供一些內部空間 */
+  padding: 16px; /* 為 div 提供一些內部空間 */
   /* padding-left: 60px; */
   border-radius: 1em; /* 圓角的半徑 */
   box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 6px 20px rgba(0,0,0,0.19); /* 添加陰影效果 */
   /* 首個陰影是較小的模糊，主要為輕微突出效果
      第二個陰影模糊範圍更大，為元素添加更明顯的深度 */
-  height: 312px;
+  height: 350px;
   font-size: 1rem;
   /* color: aliceblue; */
 }
@@ -128,18 +165,18 @@ body {
   padding: 16px; /* 為 div 提供一些內部空間 */
   /* padding-left: 60px; */
   border-radius: 1em; /* 圓角的半徑 */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 6px 20px rgba(0,0,0,0.19); /* 添加陰影效果 */
+  /* box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 6px 20px rgba(0,0,0,0.19); */
   /* 首個陰影是較小的模糊，主要為輕微突出效果
      第二個陰影模糊範圍更大，為元素添加更明顯的深度 */
-  height: 280px;
+  height: 300px;
   font-size: 1em;
   color: #004099;
 }
 
 .option-button {
   display: inline-block;
-  padding: 6px;
-  padding-left: 12px;
+  padding: 8px;
+  padding-left: 20px;
   /* margin: 5px; */
   cursor: pointer;
   text-align: center;
@@ -147,15 +184,30 @@ body {
   outline: none;
   background-color: #D6E7FF;
   border: 1px solid #004099;
-  border-radius: 8px;
+  border-radius: 16px;
   /* font-size: 36px; */
   color: #004099;
   margin-top: 10px;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: 500;
 }
 
+#done {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 0, 0, 0.3);
+  width: 457px;
+  height: 90px;
+  position: absolute;
+  top: 168px;
+  left: 50%;
+  color: aliceblue;
+  font-size: 1.25em;
+  z-index: 1001;
+  padding: 10px;
+  transform: translateX(-50%);
+}
+
 #report {
+  border-radius: 20px;
   /* border: 1px solid rgba(0, 0, 0, 0.1); */
   box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.9) !important;
 }
@@ -168,8 +220,8 @@ body {
 
 #bcq-name {
   position: absolute;
-  top: 1em;
-  left: 3.6em;
+  top: -0.5em;
+  left: 2.6em;
   max-width: 9ch; /* 限制寬度為 9 個字元 */
   white-space: nowrap; /* 防止文字換行 */
   overflow: hidden; /* 隱藏超出部分 */
@@ -182,10 +234,21 @@ body {
   margin-right: 1px; /* 設置首字和後續文字的間距 */
 }
 
+
+#bcq-day-hant {
+  position: fixed;
+  top: 1.2em;
+  left: 11.6em;
+}
+
+#bcq-day-hant img {
+  width: 160px;
+  height: 125px;
+}
 #bcq-type-a {
   position: fixed;
-  top: 8.2em;
-  left: 3.8em;
+  top: 5.9em;
+  left: 2.8em;
 }
 
 #bcq-type-a img {
@@ -195,8 +258,8 @@ body {
 
 #bcq-type-b {
   position: fixed;
-  top: 8.2em;
-  left: 9.6em;
+  top: 5.9em;
+  left: 7em;
 }
 
 #bcq-type-b img {
@@ -206,8 +269,8 @@ body {
 
 #bcq-type-c {
   position: fixed;
-  top: 8.2em;
-  left: 15.5em;
+  top: 5.9em;
+  left: 11.1em;
 }
 
 #bcq-type-c img {
@@ -215,21 +278,10 @@ body {
   height: 51.4px;
 }
 
-#bcq-day-hant {
-  position: fixed;
-  top: 1.8em;
-  left: 15.2em;
-}
-
-#bcq-day-hant img {
-  width: 171.5px;
-  height: 137.1px;
-}
-
 #bcq-desc {
   position: fixed;
-  top: 11em;
-  left: 1.45em;
+  top: 7.9em;
+  left: 1em;
 }
 
 #bcq-desc img {
@@ -239,18 +291,50 @@ body {
 
 #bcq-yes {
   position: fixed;
-  top: 32.5em;
+  top: 33em;
   left: 7.6em;
   color: aliceblue;
-  font-size: 0.8em;
+  font-size: 0.9rem;
   width: 26.8em;
 }
 
 #bcq-no {
   position: fixed;
-  top: 38.1em;
+  top: 39.6em;
   left: 7.6em;
   color: aliceblue;
-  font-size: 0.8em;
+  font-size: 0.9rem;
   width: 26.8em;
+}
+
+#bcq-qrcode-no {
+  /* 移除 right 屬性，改用 left: 50% 和 transform 來置中 */
+  position: fixed;
+  bottom: 6em;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #002B66;
+  color: #FFFFFF;
+  padding: 0.8em 1.5em;
+  border-radius: 2em;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+#bcq-qrcode-yes {
+  position: fixed;
+  bottom: 6.6em;  /* 改用 bottom 來設定距離底部的距離 */
+  left: 50%;    /* 設定左邊距為 50% */
+  transform: translateX(-50%);  /* 往左移動自身寬度的一半來達到水平置中 */
+  border: 15px solid #1a4b8c;
+  border-radius: 5em;
+  box-shadow: 0 0 15px rgba(0, 64, 153, 0.3);
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(5px);
+}
+
+#bcq-qrcode-yes img {
+  width: 80px;
+  height: 80px;
 }

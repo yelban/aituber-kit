@@ -127,7 +127,7 @@ function padZero(num) {
 var formContent = `
   <form>
     <div class="caption-area bg-white rounded-8" style="border: 1px solid #002864;">
-      <div class="mt-4 relative">
+      <div class="mt-8 relative">
         <label for="name" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">稱呼</label>
         <input 
           type="text" 
@@ -171,7 +171,7 @@ var formContent = `
           </svg>
         </button>
       </div>
-      <div class="mt-4 relative">
+      <div class="mt-8 relative">
         <label for="gender" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">性別</label>
         <div class="w-full bg-[#EDEFF2] rounded-lg focus:outline-none focus:ring-0"
           style="
@@ -192,7 +192,7 @@ var formContent = `
           </div>
         </div>
       </div>  
-      <div class="mt-4 relative">
+      <div class="mt-8 relative">
         <label for="age" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">年齡:</label>
         <input type="number" id="age" name="age" min="15" max="150" required class="w-full bg-[#EDEFF2] rounded-lg focus:outline-none focus:ring-0"
           style="
@@ -210,7 +210,7 @@ var formContent = `
             padding: 6px 12px;
           ">
       </div>
-      <div class="mt-4 relative">
+      <div class="mt-8 relative">
         <label for="weight" class="block text-[#ababab] -mb-8 ml-[10px] relative z-10" style="font-size: 12px;">體重:</label>
         <input type="number" id="weight" name="weight" min="15" max="250" required class="w-full bg-[#EDEFF2] rounded-lg focus:outline-none focus:ring-0"
           style="
@@ -241,7 +241,7 @@ popup.style.cssText = `
   z-index: 100;
 `;
 
-popup.classList.add("popup", "bottom-[100px]", "w-[50%]");
+popup.classList.add("popup");
 
 // var left = (document.documentElement.clientWidth - popup.offsetWidth) / 2;
 // var top = 150;
@@ -347,7 +347,10 @@ function showQuestion(index, data) {
           }, 100);
         } else {
           console.log('問卷完成');
-          // TODO: 進行問卷完成後的處理，例如提交資料至伺服器等
+          const answerInput = document.getElementById('answerInput');
+          if (answerInput) {
+            answerInput.setAttribute('data-answer-type', 'submit');
+          }
           submitAnswers();  // 假設有一個函數來處理最終的提交
         }
       }, 500);
@@ -401,39 +404,38 @@ function submitAnswers() {
     // form.innerHTML = '';
     popup.remove();
 
+    // 添加過渡效果並確保元素淡出
+    setTimeout(() => {
+      const elementsToFade = [
+        'agentTag',
+        'dialogBox',
+        'assistantText',
+        'messageInput'
+      ]
+      
+      elementsToFade.forEach(id => {
+        const element = document.getElementById(id)
+        if (element) {
+          // 添加過渡效果
+          element.style.transition = 'opacity 0.5s ease-out'
+          element.style.opacity = '0'
+        }
+      })
+      
+      // 在淡出完成後隱藏元素
+      setTimeout(() => {
+        elementsToFade.forEach(id => {
+          const element = document.getElementById(id)
+          if (element) {
+            element.style.display = 'none'
+          }
+        })
+      }, 500) // 等待過渡效果完成
+    }, 1500)
+
     // 建立一個新的 div 元素
     var doneDiv = document.createElement('div');
     doneDiv.id = 'done';
-
-    // 設置 div 的寬度和高度
-    doneDiv.style.width = '457px';
-    doneDiv.style.height = '90px';
-
-    // 設置 div 的位置為絕對定位
-    doneDiv.style.position = 'absolute';
-
-    // 設置 div 的上下左右距離都為 50%，使其在頁面中心
-    doneDiv.style.top = '50px';
-    doneDiv.style.left = '50%';
-    doneDiv.style.background = `linear-gradient(
-      135deg,
-      rgba(40, 80, 135, 0.4) 0%,
-      rgba(40, 80, 135, 0.6) 100%
-    )`;
-    doneDiv.style.backgroundImage = `linear-gradient(
-      135deg,
-      rgba(40, 80, 135, 0.4) 0%,
-      rgba(40, 80, 135, 0.6) 100%
-    ),
-    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c8TV1mAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOwtAAAFVklEQVR4XpWWB67c2BUFb3g557T/hRo9/WUMZHlgr4Bg8Z4qQgQJlHI4A8SzFVrapvmTF9O7dmYRFZ60YiBhJRCgh1FYhiLAmdvX0CzTOpNE77ME0Zty/nWWzchDtiqrmQDeuv3powQ5ta2eN0FY0InkqDD73lT9c9lEzwUNqgFHs9VQce3TVClFCQrSTfOiYkVJQBmpbq2L6iZavPnAPcoU0dSw0SUTqz/GtrGuXfbyyBniKykOWQWGqwwMA7QiYAxi+IlPdqo+hYHnUt5ZPfnsHJyNiDtnpJyayNBkF6cWoYGAMY92U2hXHF/C1M8uP/ZtYdiuj26UdAdQQSXQErwSOMzt/XWRWAz5GuSBIkwG1H3FabJ2OsUOUhGC6tK4EMtJO0ttC6IBD3kM0ve0tJwMdSfjZo+EEISaeTr9P3wYrGjXqyC1krcKdhMpxEnt5JetoulscpyzhXN5FRpuPHvbeQaKxFAEB6EN+cYN6xD7RYGpXpNndMmZgM5Dcs3YSNFDHUo2LGfZuukSWyUYirJAdYbF3MfqEKmjM+I2EfhA94iG3L7uKrR+GdWD73ydlIB+6hgref1QTlmgmbM3/LeX5GI1Ux1RWpgxpLuZ2+I+IjzZ8wqE4nilvQdkUdfhzI5QDWy+kw5Wgg2pGpeEVeCCA7b85BO3F9DzxB3cdqvBzWcmzbyMiqhzuYqtHRVG2y4x+KOlnyqla8AoWWpuBoYRxzXrfKuILl6SfiWCbjxoZJUaCBj1CjH7GIaDbc9kqBY3W/Rgjda1iqQcOJu2WW+76pZC9QG7M00dffe9hNnseupFL53r8F7YHSwJWUKP2q+k7RdsxyOB11n0xtOvnW4irMMFNV4H0uqwS5ExsmP9AxbDTc9JwgneAT5vTiUSm1E7BSflSt3bfa1tv8Di3R8n3Af7MNWzs49hmauE2wP+ttrq+AsWpFG2awvsuOqbipWHgtuvuaAE+A1Z/7gC9hesnr+7wqCwG8c5yAg3AL1fm8T9AZtp/bbJGwl1pNrE7RuOX7PeMRUERVaPpEs+yqeoSmuOlokqw49pgomjLeh7icHNlG19yjs6XXOMedYm5xH2YxpV2tc0Ro2jJfxC50ApuxGob7lMsxfTbeUv07TyYxpeLucEH1gNd4IKH2LAg5TdVhlCafZvpskfncCfx8pOhJzd76bJWeYFnFciwcYfubRc12Ip/ppIhA1/mSZ/RxjFDrJC5xifFjJpY2Xl5zXdguFqYyTR1zSp1Y9p+tktDYYSNflcxI0iyO4TPBdlRcpeqjK/piF5bklq77VSEaA+z8qmJTFzIWiitbnzR794USKBUaT0NTEsVjZqLaFVqJoPN9ODG70IPbfBHKK+/q/AWR0tJzYHRULOa4MP+W/HfGadZUbfw177G7j/OGbIs8TahLyynl4X4RinF793Oz+BU0saXtUHrVBFT/DnA3ctNPoGbs4hRIjTok8i+algT1lTHi4SxFvONKNrgQFAq2/gFnWMXgwffgYMJpiKYkmW3tTg3ZQ9Jq+f8XN+A5eeUKHWvJWJ2sgJ1Sop+wwhqFVijqWaJhwtD8MNlSBeWNNWTa5Z5kPZw5+LbVT99wqTdx29lMUH4OIG/D86ruKEauBjvH5xy6um/Sfj7ei6UUVk4AIl3MyD4MSSTOFgSwsH/QJWaQ5as7ZcmgBZkzjjU1UrQ74ci1gWBCSGHtuV1H2mhSnO3Wp/3fEV5a+4wz//6qy8JxjZsmxxy5+4w9CDNJY09T072iKG0EnOS0arEYgXqYnXcYHwjTtUNAcMelOd4xpkoqiTYICWFq0JSiPfPDQdnt+4/wuqcXY47QILbgAAAABJRU5ErkJggg==')
-    `;
-    doneDiv.style.color = 'aliceblue';
-    doneDiv.style.fontSize = '1.25em';
-    doneDiv.style.zIndex = 1001;
-    doneDiv.style.padding = '10px';
-
-    // 使用 transform 屬性將 div 向上和向左移動自身寬高的一半，實現真正的居中
-    doneDiv.style.transform = 'translateX(-50%)';
 
     doneDiv.innerHTML = '<div>恭喜你完成體質問卷<br />讓我們來看看今日的建議吧！</div>';
 
@@ -541,15 +543,15 @@ function submitAnswers() {
 
     var today = new Date();
     var day = today.getDate();
+    var month = today.getMonth() + 1;
 
-    var dayHant = `農民曆-2406-date06${day.toString().padStart(2, '0')}.png`;
+    var dayHant = `農民曆-2406-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}.png`;
 
     var bcqDesc = "農民曆-2406-blue" + padZero(idx) + ".png";
 
     var bcqYes = result["宜排版"];
 
     var bcqNo = result["忌排版"];
-
 
     innerDiv.innerHTML = `<div>
     <div id="bcq-name" class="bcq-result">${name}</div>
@@ -567,6 +569,31 @@ function submitAnswers() {
 
     // 將新的 div 元素添加到頁面的 body 中
     document.body.appendChild(newDiv);
+
+    // 新增一個 div 元素
+    var bcqQrcodeNo = document.createElement('div');
+    bcqQrcodeNo.id = "bcq-qrcode-no";
+
+    // 設置 bcqQrcodeNo 的樣式和內容
+    bcqQrcodeNo.innerHTML = '不掃Qrcode，結束體驗'
+
+    // bcqQrcodeNo click 事件
+    bcqQrcodeNo.addEventListener('click', function() {
+      window.location.href = '/';
+    });
+
+    // 將元素添加到頁面
+    document.body.appendChild(bcqQrcodeNo)
+
+    // 新增一個 div 元素
+    var bcqQrcodeYes = document.createElement('div');
+    bcqQrcodeYes.id = "bcq-qrcode-yes";
+
+    // 設置 bcqQrcodeYes 的內容
+    bcqQrcodeYes.innerHTML = '<img src="/png/qrcode.png">'
+
+    // 將元素添加到頁面
+    document.body.appendChild(bcqQrcodeYes)
 
     var canvas = document.querySelector('canvas');
     
@@ -589,8 +616,10 @@ function submitAnswers() {
   });
 }
 
-// 全域音頻對象
-let currentAudio = null;
+// 修改全域音頻對象的宣告
+if (typeof window.currentAudio === 'undefined') {
+  window.currentAudio = null;
+}
 
 function fetchTTS(text, callback) {
   console.log('fetchTTS(text)', text);
@@ -598,9 +627,9 @@ function fetchTTS(text, callback) {
   showDialogBox(text);
 
   // 如果有正在播放的音頻，先停止它
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
+  if (window.currentAudio) {
+    window.currentAudio.pause();
+    window.currentAudio.currentTime = 0;
   }
 
   hideAssistantText();
@@ -635,13 +664,13 @@ function fetchTTS(text, callback) {
   .then(blob => {
     const url = URL.createObjectURL(blob);
     // 創建新的音頻對象並賦值給全域變數
-    currentAudio = new Audio(url);
-    currentAudio.play();
+    window.currentAudio = new Audio(url);
+    window.currentAudio.play();
 
     // 監聽播放結束事件，清理資源
-    currentAudio.onended = function() {
+    window.currentAudio.onended = function() {
       URL.revokeObjectURL(url);
-      currentAudio = null;
+      window.currentAudio = null;
 
       // 如果有提供 callback 函數就執行它
       if (typeof callback === 'function') {
@@ -700,9 +729,9 @@ contentContainer.style.cssText = `
 const title = document.createElement('div');
 title.style.cssText = `
   color: #002964;
-  font-size: 2rem;
+  font-size: 2.8rem;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 `;
 title.textContent = '中醫體質智析';
 
@@ -710,7 +739,7 @@ title.textContent = '中醫體質智析';
 const description = document.createElement('div');
 description.style.cssText = `
   color: #002964;
-  font-size: 1rem;
+  font-size: 1.15rem;
   text-align: center;
   // margin-bottom: 20px;
   padding-left: 10px;
@@ -722,9 +751,9 @@ description.textContent = '此體驗將蒐集相關個人資訊(毋須真實姓�
 const hint = document.createElement('div');
 hint.style.cssText = `
   color: #002964;
-  font-size: 1rem;
+  font-size: 1.15rem;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   // margin-top: -20px;
 `;
 hint.textContent = '請先閱讀並同意下方個資同意書，再進行體驗';
@@ -733,10 +762,11 @@ hint.textContent = '請先閱讀並同意下方個資同意書，再進行體驗
 const link = document.createElement('div');
 link.style.cssText = `
   color: #002964;
-  font-size: 1.25rem;
+  font-size: 1.8rem;
   font-weight: bold;
   text-decoration: underline;
-  text-underline-offset: 3px;  // 添加這行來增加底線距離
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;  // 添加這行來增加底線距離
   cursor: pointer;  // 這邊的游標設定好像沒有作用
   // margin-bottom: 20px;
 `;
@@ -746,21 +776,21 @@ link.textContent = '閱讀個人資料蒐集、處理及利用同意書';
 // 創建免責聲明
 const disclaimer = document.createElement('div');
 disclaimer.style.cssText = `
-  color: #002964;
-  font-size: 0.8rem;
+  color: #002864;
+  font-size: 1.25rem;
   text-align: center;
-  // position: absolute;
   position: fixed;
-  bottom: 15px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1001;  // 確保顯示在其他元素之上
-  // width: 100%;    // 確保寬度為 100%
-  // max-width: 90%; // 可選：設定最大寬度，避免在特寬螢幕上文字過長
-  padding: 0 20px; // 可選：增加左右內邊距
+  z-index: 1001;
+  width: 100%; // 寬度設為 100%
+  padding: 0 20px;
+  display: none;
 `;
-disclaimer.style.width = '100%';
-disclaimer.style.color = '#002964';
+// disclaimer.style.width = '100%';
+// disclaimer.style.color = '#002964';
+// disclaimer.style.display = 'none';
 disclaimer.textContent = '本體驗僅供瞭解初步體質狀況，無法取代醫療診斷';
 
 document.body.appendChild(disclaimer);
@@ -782,6 +812,7 @@ privacyDialog.style.cssText = `
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  padding: 24px;
   width: 90%;
   max-width: 600px;
   background: transparent;
@@ -794,9 +825,9 @@ privacyDialog.innerHTML = `
   <div style="
     background: #002864;
     color: white;
-    padding: 40px;
-    border-radius: 20px;
-    font-size: 11px;
+    padding: 50px;
+    border-radius: 24px;
+    font-size: 1.25rem;
     line-height: 1.6;
   ">
     <h2 style="
@@ -840,9 +871,9 @@ privacyDialog.innerHTML = `
         background: #002864;
         color: white;
         border: 2px solid white;
-        border-radius: 25px;
+        border-radius: 24px;
         cursor: pointer;
-        font-size: 1rem;
+        font-size: 2rem;
         font-weight: bold;
       ">不同意，退出體驗</button>
       
@@ -851,9 +882,9 @@ privacyDialog.innerHTML = `
         background: #002864;
         color: white;
         border: 2px solid white;
-        border-radius: 25px;
+        border-radius: 24px;
         cursor: pointer;
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: bold;
       ">同意</button>
     </div>
@@ -866,7 +897,7 @@ document.body.appendChild(privacyDialog);
 link.addEventListener('click', () => {
   privacyDialog.style.display = 'block';
   overlay.style.backgroundColor = 'rgba(255,255,255,1)';
-  disclaimer.style.color = '#FFF';
+  disclaimer.style.display = 'block';
 });
 
 // // 添加按鈕點擊事件
@@ -1111,21 +1142,6 @@ agreeBtn.addEventListener('click', () => {
 const agentTag = document.createElement('div');
 agentTag.textContent = '歐凱若';
 agentTag.id = 'agentTag';
-agentTag.style.cssText = `
-  position: fixed;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgb(72,238,238);
-  color: rgb(0,128,128);
-  padding: 7px 15px;
-  border-radius: 12px;
-  border: 1px solid rgb(0,128,128);
-  font-size: 0.9rem;
-  font-weight: bold;
-  z-index: 1000;
-  display: none;
-`;
 
 // 將名稱標籤添加到文檔中
 document.body.appendChild(agentTag);
@@ -1134,23 +1150,6 @@ document.body.appendChild(agentTag);
 const dialogBox = document.createElement('div');
 dialogBox.id = 'dialogBox';
 dialogBox.textContent = '我會詢問您幾個問題，最後提供專屬今天的體質農民曆。';
-dialogBox.style.cssText = `
-  position: absolute;
-  left: 10px;
-  background-color: white;
-  color: rgb(0, 128, 128);
-  padding: 7px 15px;
-  border-radius: 15px;
-  font-size: 1rem;
-  font-weight: bold;
-  border: 1px solid rgb(0, 128, 128);
-  width: 45%;
-  max-width: 90%;
-  line-height: 1.5;
-  z-index: 1000;
-  white-space: wrap;
-  display: none;
-`;
 
 // 將對話框添加到文檔中
 document.body.appendChild(dialogBox);
@@ -1181,7 +1180,7 @@ function showDialogBox(text) {
       if (agentTagElement) {
         const agentTagRect = agentTagElement.getBoundingClientRect()
         console.log(agentTagRect)
-        dialogBox.style.top = `${agentTagRect.top + 50}px`
+        dialogBox.style.top = `${agentTagRect.top + 60}px`
         window.isDialogBoxPositionSet = true
       }
     }
