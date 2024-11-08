@@ -498,6 +498,9 @@ export default function Home() {
   const [tmpMessages, setTmpMessages] = useState<tmpMessage[]>([]);
 
   useEffect(() => {
+    // 如果不是 WebSocket 模式，直接返回，不執行任何 WebSocket 相關操作
+    if (!webSocketMode) return;
+
     const handleOpen = (event: Event) => {
       console.log("WebSocket connection opened:", event);
     };
@@ -521,11 +524,12 @@ export default function Home() {
       ws.addEventListener("close", handleClose);
       return ws;
     }
+    
     let ws = setupWebsocket();
     wsRef.current = ws;
 
     const reconnectInterval = setInterval(() => {
-      if (webSocketMode && ws.readyState !== WebSocket.OPEN && ws.readyState !== WebSocket.CONNECTING) {
+      if (ws.readyState !== WebSocket.OPEN && ws.readyState !== WebSocket.CONNECTING) {
         setChatProcessing(false);
         console.log("try reconnecting...");
         ws.close();
