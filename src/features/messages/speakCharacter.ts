@@ -8,6 +8,7 @@ import { synthesizeStyleBertVITS2Api } from './synthesizeStyleBertVITS2'
 import { synthesizeVoiceApi } from './synthesizeVoice'
 import { synthesizeVoiceElevenlabsApi } from './synthesizeVoiceElevenlabs'
 import { synthesizeVoiceGoogleApi } from './synthesizeVoiceGoogle'
+import { SpeakQueue } from './speakQueue'
 
 interface EnglishToJapanese {
   [key: string]: string
@@ -16,6 +17,8 @@ interface EnglishToJapanese {
 const VOICE_VOX_API_URL =
   process.env.NEXT_PUBLIC_VOICE_VOX_API_URL || 'http://localhost:50021'
 const typedEnglishToJapanese = englishToJapanese as EnglishToJapanese
+
+const speakQueue = new SpeakQueue()
 
 const createSpeakCharacter = () => {
   let lastTime = 0
@@ -93,18 +96,31 @@ const createSpeakCharacter = () => {
     })
 
     prevFetchPromise = fetchPromise
-    prevSpeakPromise = Promise.all([fetchPromise, prevSpeakPromise]).then(
-      ([audioBuffer]) => {
-        if (!audioBuffer) {
-          return
-        }
-        const hs = homeStore.getState()
-        return hs.viewer.model?.speak(audioBuffer, screenplay)
-      }
-    )
-    prevSpeakPromise.then(() => {
-      onComplete?.()
+
+    // キューを使用した処理に変更
+    fetchPromise.then((audioBuffer) => {
+      if (!audioBuffer) return
+
+      speakQueue.addTask({
+        audioBuffer,
+        screenplay,
+        isNeedDecode: true,
+        onComplete,
+      })
     })
+
+    // prevSpeakPromise = Promise.all([fetchPromise, prevSpeakPromise]).then(
+    //   ([audioBuffer]) => {
+    //     if (!audioBuffer) {
+    //       return
+    //     }
+    //     const hs = homeStore.getState()
+    //     return hs.viewer.model?.speak(audioBuffer, screenplay)
+    //   }
+    // )
+    // prevSpeakPromise.then(() => {
+    //   onComplete?.()
+    // })
   }
 }
 

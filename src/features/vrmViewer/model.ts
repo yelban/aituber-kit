@@ -1,5 +1,10 @@
 import * as THREE from 'three'
-import { VRM, VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm'
+import {
+  VRM,
+  VRMExpressionPresetName,
+  VRMLoaderPlugin,
+  VRMUtils,
+} from '@pixiv/three-vrm'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { VRMAnimation } from '../../lib/VRMAnimation/VRMAnimation'
 import { VRMLookAtSmootherLoaderPlugin } from '@/lib/VRMLookAtSmootherLoaderPlugin/VRMLookAtSmootherLoaderPlugin'
@@ -69,13 +74,41 @@ export class Model {
   /**
    * 音声を再生し、リップシンクを行う
    */
-  public async speak(buffer: ArrayBuffer, screenplay: Screenplay) {
+  public async speak(
+    buffer: ArrayBuffer,
+    screenplay: Screenplay,
+    isNeedDecode: boolean = true
+  ) {
     this.emoteController?.playEmotion(screenplay.expression)
     await new Promise((resolve) => {
-      this._lipSync?.playFromArrayBuffer(buffer, () => {
-        resolve(true)
-      })
+      this._lipSync?.playFromArrayBuffer(
+        buffer,
+        () => {
+          resolve(true)
+        },
+        isNeedDecode
+      )
     })
+  }
+
+  /**
+   * 播放表情動作
+   * @param preset - 表情預設值
+   * - 'neutral' - 一般表情
+   * - 'happy' - 開心表情
+   * - 'angry' - 生氣表情
+   * - 'sad' - 悲傷表情
+   * - etc...
+   * @throws Error 當 emoteController 未初始化時
+   * @returns Promise<void>
+   */
+  public async playEmotion(preset: VRMExpressionPresetName): Promise<void> {
+    if (!this.emoteController) {
+      throw new Error(
+        'EmoteController is not initialized. Please load VRM first.'
+      )
+    }
+    this.emoteController.playEmotion(preset)
   }
 
   public update(delta: number): void {
