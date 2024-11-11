@@ -14,8 +14,7 @@ interface EnglishToJapanese {
   [key: string]: string
 }
 
-const VOICE_VOX_API_URL =
-  process.env.NEXT_PUBLIC_VOICE_VOX_API_URL || 'http://localhost:50021'
+const VOICE_VOX_API_URL = 'http://localhost:50021'
 const typedEnglishToJapanese = englishToJapanese as EnglishToJapanese
 
 const speakQueue = new SpeakQueue()

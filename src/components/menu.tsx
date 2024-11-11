@@ -27,7 +27,7 @@ export const Menu = () => {
   const assistantMessage = homeStore((s) => s.assistantMessage)
   const showWebcam = menuStore((s) => s.showWebcam)
   const showCapture = menuStore((s) => s.showCapture)
-  const showControlPanel = menuStore((s) => s.showControlPanel)
+  const showControlPanel = settingsStore((s) => s.showControlPanel)
   const slidePlaying = slideStore((s) => s.isPlaying)
   const showAssistantText = settingsStore((s) => s.showAssistantText)
 
