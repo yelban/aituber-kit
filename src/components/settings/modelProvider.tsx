@@ -1,3 +1,4 @@
+// eslint-disable-next-line react-hooks/exhaustive-deps
 import { useTranslation } from 'react-i18next'
 import homeStore from '@/features/stores/home'
 import menuStore from '@/features/stores/menu'
@@ -68,6 +69,7 @@ const ModelProvider = () => {
         })
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 

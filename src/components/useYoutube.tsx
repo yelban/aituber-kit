@@ -29,6 +29,7 @@ const useYoutube = async ({ handleSendChat }: Params) => {
 
     console.log('Call fetchAndProcessComments !!!')
     fetchAndProcessComments(handleSendChat)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -40,6 +41,7 @@ const useYoutube = async ({ handleSendChat }: Params) => {
     }, INTERVAL_MILL_SECONDS_RETRIEVING_COMMENTS)
 
     return () => clearInterval(intervalId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [youtubePlaying])
 }
 export default useYoutube
