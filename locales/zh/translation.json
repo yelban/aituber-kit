@@ -126,6 +126,7 @@
   "PdfConvertSuccess": "轉換完成",
   "PdfConvertError": "轉換失敗",
   "PdfConvertSubmitError": "請確保已設定PDF檔案、資料夾名稱和API金鑰。",
+  "LocalStorageReset": "重設設定（頁面會重新載入）",
   "Errors": {
     "EmptyAPIKey": "API 金鑰未設定",
     "AIInvalidProperty": "AI 服務設定值不正確",
