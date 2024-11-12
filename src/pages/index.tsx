@@ -9,6 +9,7 @@ import homeStore from '@/features/stores/home'
 import settingsStore from '@/features/stores/settings' // 追加
 import '@/lib/i18n'
 import { buildUrl } from '@/utils/buildUrl'
+import { TestVoiceButton } from '../components/TestVoiceButton'
 
 const Home = () => {
   const bgUrl = homeStore((s) => `url(${buildUrl(s.backgroundImageUrl)})`)
@@ -23,6 +24,7 @@ const Home = () => {
       <Menu />
       <ModalImage />
       {messageReceiverEnabled && <MessageReceiver />} {/* 条件付きレンダリング */}
+      <TestVoiceButton />
     </div>
   )
 }

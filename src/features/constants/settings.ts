@@ -36,6 +36,7 @@ export type AIVoice =
   | 'stylebertvits2'
   | 'gsvitts'
   | 'elevenlabs'
+  | 'openai'
 
 export type Language = 'en' | 'ja' | 'ko' | 'zh' // ISO 639-1
 
