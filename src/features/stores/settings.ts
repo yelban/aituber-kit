@@ -132,10 +132,15 @@ const settingsStore = create<SettingsState>()(
       stylebertvits2ServerUrl: '',
       stylebertvits2ModelId:
         process.env.NEXT_PUBLIC_STYLEBERTVITS2_MODEL_ID || '0',
+      stylebertvits2ApiKey: '',
       stylebertvits2Style:
         process.env.NEXT_PUBLIC_STYLEBERTVITS2_STYLE || 'Neutral',
-      stylebertvits2SdpRatio: 0.2,
-      stylebertvits2Length: 1.0,
+      stylebertvits2SdpRatio:
+        parseFloat(process.env.NEXT_PUBLIC_STYLEBERTVITS2_SDP_RATIO || '0.2') ||
+        0.2,
+      stylebertvits2Length:
+        parseFloat(process.env.NEXT_PUBLIC_STYLEBERTVITS2_LENGTH || '1.0') ||
+        1.0,
       gsviTtsServerUrl:
         process.env.NEXT_PUBLIC_GSVI_TTS_URL || 'http://127.0.0.1:5000/tts',
       gsviTtsModelId: process.env.NEXT_PUBLIC_GSVI_TTS_MODEL_ID || '0',
@@ -175,15 +180,8 @@ const settingsStore = create<SettingsState>()(
         (process.env.NEXT_PUBLIC_SELECT_VOICE_LANGUAGE as VoiceLanguage) ||
         'zh-Hant',
       changeEnglishToJapanese:
-        process.env.NEXT_PUBLIC_CHANGE_ENGLISH_TO_JAPANESE === 'true'
-          ? true
-          : false,
-      showControlPanel:
-        process.env.NEXT_PUBLIC_SHOW_CONTROL_PANEL === 'true'
-          ? true
-          : process.env.NEXT_PUBLIC_SHOW_CONTROL_PANEL === 'false'
-            ? false
-            : true,
+        process.env.NEXT_PUBLIC_CHANGE_ENGLISH_TO_JAPANESE === 'true',
+      showControlPanel: process.env.NEXT_PUBLIC_SHOW_CONTROL_PANEL !== 'false',
       webSocketMode:
         process.env.NEXT_PUBLIC_WEB_SOCKET_MODE === 'true' ? true : false,
       slideMode: process.env.NEXT_PUBLIC_SLIDE_MODE === 'true' ? true : false,

@@ -35,12 +35,7 @@ const homeStore = create<HomeState>()(
       // persisted states
       userOnboarded: false,
       chatLog: [],
-      showIntroduction:
-        process.env.NEXT_PUBLIC_SHOW_INTRODUCTION === 'true'
-          ? true
-          : process.env.NEXT_PUBLIC_SHOW_INTRODUCTION === 'false'
-            ? false
-            : true,
+      showIntroduction: process.env.NEXT_PUBLIC_SHOW_INTRODUCTION !== 'false',
       assistantMessage: '',
 
       // transient states
@@ -70,10 +65,17 @@ const homeStore = create<HomeState>()(
     {
       name: 'aitube-kit-home',
       partialize: ({ chatLog, showIntroduction }) => ({
-        chatLog,
+        chatLog: chatLog.map((message: Message) => ({
+          ...message,
+          content:
+            typeof message.content === 'string'
+              ? message.content
+              : message.content[0].text,
+        })),
         showIntroduction,
       }),
     }
   )
 )
+
 export default homeStore
