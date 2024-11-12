@@ -8,7 +8,10 @@ import { synthesizeStyleBertVITS2Api } from './synthesizeStyleBertVITS2'
 import { synthesizeVoiceApi } from './synthesizeVoice'
 import { synthesizeVoiceElevenlabsApi } from './synthesizeVoiceElevenlabs'
 import { synthesizeVoiceGoogleApi } from './synthesizeVoiceGoogle'
+import { synthesizeVoiceOpenAIApi } from './synthesizeVoiceOpenAI'
 import { SpeakQueue } from './speakQueue'
+import toastStore from '@/features/stores/toast'
+import i18next from 'i18next'
 
 interface EnglishToJapanese {
   [key: string]: string
@@ -39,59 +42,74 @@ const createSpeakCharacter = () => {
       )
     }
 
+    let isNeedDecode = true
+
     const fetchPromise = prevFetchPromise.then(async () => {
       const now = Date.now()
       if (now - lastTime < 1000) {
         await wait(1000 - (now - lastTime))
       }
       let buffer
-      if (ss.selectVoice == 'koeiromap') {
-        buffer = await fetchAudio(screenplay.talk, ss.koeiromapKey).catch(
-          () => null
-        )
-      } else if (ss.selectVoice == 'voicevox') {
-        buffer = await fetchAudioVoiceVox(
-          screenplay.talk,
-          ss.voicevoxSpeaker,
-          ss.voicevoxSpeed,
-          ss.voicevoxPitch,
-          ss.voicevoxIntonation
-        ).catch(() => null)
-      } else if (ss.selectVoice == 'google') {
-        const googleTtsTypeByLang = getGoogleTtsType(
-          ss.googleTtsType,
-          ss.selectLanguage
-        )
-        buffer = await fetchAudioGoogle(
-          screenplay.talk,
-          googleTtsTypeByLang
-        ).catch(() => null)
-      } else if (ss.selectVoice == 'stylebertvits2') {
-        buffer = await fetchAudioStyleBertVITS2(
-          screenplay.talk,
-          ss.stylebertvits2ServerUrl,
-          ss.stylebertvits2ApiKey,
-          ss.stylebertvits2ModelId,
-          ss.stylebertvits2Style,
-          ss.stylebertvits2SdpRatio,
-          ss.stylebertvits2Length,
-          ss.selectLanguage
-        ).catch(() => null)
-      } else if (ss.selectVoice == 'gsvitts') {
-        buffer = await fetchAudioVoiceGSVIApi(
-          screenplay.talk,
-          ss.gsviTtsServerUrl,
-          ss.gsviTtsModelId,
-          ss.gsviTtsBatchSize,
-          ss.gsviTtsSpeechRate
-        ).catch(() => null)
-      } else if (ss.selectVoice == 'elevenlabs') {
-        buffer = await fetchAudioElevenlabs(
-          screenplay.talk,
-          ss.elevenlabsApiKey,
-          ss.elevenlabsVoiceId,
-          ss.selectLanguage
-        ).catch(() => null)
+      try {
+        if (ss.selectVoice == 'koeiromap') {
+          buffer = await fetchAudio(screenplay.talk, ss.koeiromapKey).catch(
+            () => null
+          )
+        } else if (ss.selectVoice == 'voicevox') {
+          buffer = await fetchAudioVoiceVox(
+            screenplay.talk,
+            ss.voicevoxSpeaker,
+            ss.voicevoxSpeed,
+            ss.voicevoxPitch,
+            ss.voicevoxIntonation
+          ).catch(() => null)
+        } else if (ss.selectVoice == 'google') {
+          const googleTtsTypeByLang = getGoogleTtsType(
+            ss.googleTtsType,
+            ss.selectLanguage
+          )
+          buffer = await fetchAudioGoogle(
+            screenplay.talk,
+            googleTtsTypeByLang
+          ).catch(() => null)
+        } else if (ss.selectVoice == 'stylebertvits2') {
+          buffer = await fetchAudioStyleBertVITS2(
+            screenplay.talk,
+            ss.stylebertvits2ServerUrl,
+            ss.stylebertvits2ApiKey,
+            ss.stylebertvits2ModelId,
+            ss.stylebertvits2Style,
+            ss.stylebertvits2SdpRatio,
+            ss.stylebertvits2Length,
+            ss.selectLanguage
+          ).catch(() => null)
+        } else if (ss.selectVoice == 'gsvitts') {
+          buffer = await fetchAudioVoiceGSVIApi(
+            screenplay.talk,
+            ss.gsviTtsServerUrl,
+            ss.gsviTtsModelId,
+            ss.gsviTtsBatchSize,
+            ss.gsviTtsSpeechRate
+          ).catch(() => null)
+        } else if (ss.selectVoice == 'elevenlabs') {
+          buffer = await fetchAudioElevenlabs(
+            screenplay.talk,
+            ss.elevenlabsApiKey,
+            ss.elevenlabsVoiceId,
+            ss.selectLanguage
+          ).catch(() => null)
+        } else if (ss.selectVoice == 'openai') {
+          buffer = await synthesizeVoiceOpenAIApi(
+            screenplay.talk,
+            ss.openaiTTSKey || ss.openaiKey,
+            ss.openaiTTSVoice,
+            ss.openaiTTSModel,
+            ss.openaiTTSSpeed
+          )
+        }
+      } catch (error) {
+        handleTTSError(error, ss.selectVoice)
+        return null
       }
       lastTime = Date.now()
       return buffer
@@ -157,6 +175,30 @@ function getGppgleTtsType(selectLanguage: Language): string {
     default:
       return 'en-US-Neural2-F'
   }
+}
+
+function handleTTSError(error: unknown, serviceName: string): void {
+  let message: string
+  if (error instanceof Error) {
+    message = error.message
+  } else if (typeof error === 'string') {
+    message = error
+  } else {
+    message = i18next.t('Errors.UnexpectedError')
+  }
+  const errorMessage = i18next.t('Errors.TTSServiceError', {
+    serviceName,
+    message,
+  })
+
+  toastStore.getState().addToast({
+    message: errorMessage,
+    type: 'error',
+    duration: 5000,
+    tag: 'tts-error',
+  })
+
+  console.error(errorMessage)
 }
 
 export const speakCharacter = createSpeakCharacter()

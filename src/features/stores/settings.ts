@@ -8,6 +8,8 @@ import {
   AIVoice,
   Language,
   VoiceLanguage,
+  OpenAITTSVoice,
+  OpenAITTSModel,
 } from '../constants/settings'
 
 export const multiModalAIServices = ['openai', 'anthropic', 'google'] as const
@@ -55,6 +57,10 @@ interface ModelProvider {
   gsviTtsBatchSize: number
   gsviTtsSpeechRate: number
   elevenlabsVoiceId: string
+  openaiTTSKey: string
+  openaiTTSVoice: OpenAITTSVoice
+  openaiTTSModel: OpenAITTSModel
+  openaiTTSSpeed: number
 }
 
 interface Integrations {
@@ -151,6 +157,14 @@ const settingsStore = create<SettingsState>()(
         parseFloat(process.env.NEXT_PUBLIC_GSVI_TTS_SPEECH_RATE || '1.0') ||
         1.0,
       elevenlabsVoiceId: '',
+      openaiTTSKey: '',
+      openaiTTSVoice:
+        (process.env.NEXT_PUBLIC_OPENAI_TTS_VOICE as OpenAITTSVoice) ||
+        'shimmer',
+      openaiTTSModel:
+        (process.env.NEXT_PUBLIC_OPENAI_TTS_MODEL as OpenAITTSModel) || 'tts-1',
+      openaiTTSSpeed:
+        parseFloat(process.env.NEXT_PUBLIC_OPENAI_TTS_SPEED || '1.0') || 1.0,
 
       // Integrations
       difyUrl: '',
@@ -171,7 +185,7 @@ const settingsStore = create<SettingsState>()(
         process.env.NEXT_PUBLIC_SHOW_ASSISTANT_TEXT === 'true' ? true : false,
       showCharacterName:
         process.env.NEXT_PUBLIC_SHOW_CHARACTER_NAME === 'true' ? true : false,
-      systemPrompt: SYSTEM_PROMPT,
+      systemPrompt: process.env.NEXT_PUBLIC_SYSTEM_PROMPT || SYSTEM_PROMPT,
 
       // General
       selectLanguage:
@@ -238,6 +252,10 @@ const settingsStore = create<SettingsState>()(
         webSocketMode: state.webSocketMode,
         messageReceiverEnabled: state.messageReceiverEnabled,
         clientId: state.clientId,
+        openaiTTSKey: state.openaiTTSKey,
+        openaiTTSVoice: state.openaiTTSVoice,
+        openaiTTSModel: state.openaiTTSModel,
+        openaiTTSSpeed: state.openaiTTSSpeed,
       }),
     }
   )
