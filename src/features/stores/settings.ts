@@ -75,7 +75,6 @@ interface Character {
   showAssistantText: boolean
   showCharacterName: boolean
   systemPrompt: string
-  conversationContinuityMode: boolean
 }
 
 interface General {
@@ -118,10 +117,10 @@ const settingsStore = create<SettingsState>()(
       selectAIModel: process.env.NEXT_PUBLIC_SELECT_AI_MODEL || 'gpt-4',
       localLlmUrl: process.env.NEXT_PUBLIC_LOCAL_LLM_URL || '',
       selectVoice:
-        (process.env.NEXT_PUBLIC_SELECT_VOICE as AIVoice) || 'voicevox',
+        (process.env.NEXT_PUBLIC_SELECT_VOICE as AIVoice) || 'google',
       koeiroParam: DEFAULT_PARAM,
       googleTtsType:
-        process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE || 'en-US-Neural2-F',
+        process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE || 'cmn-TW-Wavenet-A',
       voicevoxSpeaker: process.env.NEXT_PUBLIC_VOICEVOX_SPEAKER || '46',
       voicevoxSpeed:
         parseFloat(process.env.NEXT_PUBLIC_VOICEVOX_SPEED || '1.0') || 1.0,
@@ -171,7 +170,6 @@ const settingsStore = create<SettingsState>()(
       showCharacterName:
         process.env.NEXT_PUBLIC_SHOW_CHARACTER_NAME === 'true' ? true : false,
       systemPrompt: SYSTEM_PROMPT,
-      conversationContinuityMode: false,
 
       // General
       selectLanguage:
@@ -225,18 +223,15 @@ const settingsStore = create<SettingsState>()(
         elevenlabsVoiceId: state.elevenlabsVoiceId,
         difyUrl: state.difyUrl,
         difyConversationId: state.difyConversationId,
-        youtubeMode: state.youtubeMode,
         youtubeLiveId: state.youtubeLiveId,
         characterName: state.characterName,
         showAssistantText: state.showAssistantText,
         showCharacterName: state.showCharacterName,
         systemPrompt: state.systemPrompt,
-        conversationContinuityMode: state.conversationContinuityMode,
         selectLanguage: state.selectLanguage,
         selectVoiceLanguage: state.selectVoiceLanguage,
         changeEnglishToJapanese: state.changeEnglishToJapanese,
         webSocketMode: state.webSocketMode,
-        slideMode: state.slideMode,
       }),
     }
   )
